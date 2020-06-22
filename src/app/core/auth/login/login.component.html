@@ -1,0 +1,42 @@
+<div class="center"></div>
+<div class="container register-container">
+  <div class="logo"></div>
+  <div class="card">
+    <div class="card-body">
+      <span class="text-center"><h4>Chicken Rice Shop</h4></span>
+      <form class="registerForm" [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" >
+        <div class="form-group">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            formControlName="email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="password"
+            placeholder="Password"
+            class="form-control"
+            id="exampleInputPassword1"
+            name="password"
+            formControlName="password"
+            required
+
+          />
+        </div>
+        <div class="text-center">
+          <input type="checkbox" />&nbsp;<small>Keep me sign-in</small>
+        </div>
+        <br />
+        <button class="btn btn-primary btn-block" type="submit" [disabled]="!loginForm.valid">
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

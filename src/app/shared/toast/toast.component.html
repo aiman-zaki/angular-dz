@@ -1,0 +1,11 @@
+<div [class.ngb-toasts]="true">
+  <ngb-toast *ngFor="let toast of toasts$ | async"
+    [class]="toast.class"
+    [autohide]="toast.autohide"
+    [delay]="toast.delay"
+    (hide)="onRemove(toast)"
+
+    >
+    <div (click)="onRemove(toast)">{{toast.content}}</div>
+  </ngb-toast>
+</div>

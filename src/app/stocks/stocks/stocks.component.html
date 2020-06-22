@@ -1,0 +1,73 @@
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4>Stocks</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button (click)="onNavigatToStockForm()" class="btn btn-primary">
+        <fa-icon [icon]="faPlusCircle"></fa-icon> Stock
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="p-3">
+  <div class="row" *ngIf="stocks$ | async as stocks">
+    <ng-container *ngIf="stocks.length > 0; else noData">
+      <div class="col-12">
+        <div class ="card bg-primary" style="color: white;">
+          <div class ="card-body">
+            <div class="row">
+              <div class="col-1">
+                <span><fa-icon [icon]="faCalendar"></fa-icon> Stock Date</span>
+              </div>
+              <div class="col-1">
+                <span><fa-icon [icon]="faThumbtack"></fa-icon> Branch</span>
+              </div>
+              <div class="col-1">
+                <span><fa-icon [icon]="faUser"></fa-icon> Worker</span>
+              </div>
+              <div class="col-1">
+                <span><fa-icon [icon]="faClock"></fa-icon> Shift Work</span>
+              </div>
+              <div class="col-1">
+                <span><fa-icon [icon]="faCalendar"></fa-icon> Date Inserted</span>
+              </div>
+              <div class="col-1">
+                <span><fa-icon [icon]="faCalendar"></fa-icon> Date Updated</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-2" *ngFor="let stock of stocks">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-1">
+                <span>{{ stock.stock_date | date: "dd/MM/yyyy" }}</span>
+              </div>
+              <div class="col-1">
+                <span>{{ stock.branch.branch }}</span>
+              </div>
+              <div class="col-1">
+                <span>{{ stock.user.first_name }}</span>
+              </div>
+              <div class="col-1">
+                <span>{{ stock.shift_work.shift }}</span>
+              </div>
+              <div class="col-1">
+                <span>{{ stock.date_created | date: "dd/MM/yyyy" }}</span>
+              </div>
+              <div class="col-1">
+                <span>{{ stock.date_updated | date: "dd/MM/yyyy" }}</span>
+              </div>
+              <div class="col" style="text-align: right;">
+                <button type="button" (click)="onViewStockForm(stock.id)" class="btn btn-primary btn-sm"> <fa-icon [icon]="faEye"></fa-icon> View </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-template #noData></ng-template>

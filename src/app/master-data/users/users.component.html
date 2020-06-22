@@ -1,0 +1,51 @@
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4>Users</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button class="btn btn-primary">New User</button>
+    </div>
+  </div>
+</div>
+
+
+<div class = "container">
+  <div class = "card">
+    <div class = "card-body">
+        <table class="table table-bordered">
+          <thead class="bg-primary" style="color: white;">
+            <tr >
+              <th>No</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Salary</th>
+              <th>Date Created</th>
+              <th>Date Updated</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="users$ | async as users">
+            <ng-container *ngIf="users.length > 0  else noData" >
+              <tr *ngFor="let product of users">
+                <td>{{product.id}}</td>
+                <td>{{product.first_name}}</td>
+                <td>{{product.last_name}}</td>
+                <td>{{product.salary}}</td>
+                <td>{{product.date_created | date : 'dd/MM/yyyy'}}</td>
+                <td>{{product.date_updated | date : 'dd/MM/yyyy'}}</td>
+                <td>{{product.role.text }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <td  class="text-center" colspan="6">No Data</td>
+            </ng-template>
+
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+
+

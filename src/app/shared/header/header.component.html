@@ -1,0 +1,50 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <a class="navbar-brand" translate>deZ</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      aria-controls="navbar-menu"
+      aria-label="Toggle navigation"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="!menuHidden"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbar-menu" class="collapse navbar-collapse float-xs-none" [ngbCollapse]="menuHidden">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link " [routerLink]="['/branches']"  routerLinkActive="active">
+          <i class="fas fa-question-circle"></i>
+          <span translate>Branches</span>
+        </a>
+        <a class="nav-item nav-link " [routerLink]="['/stocks']"  routerLinkActive="active">
+          <i class="fas fa-question-circle"></i>
+          <span translate>Stocks</span>
+        </a>
+        <a class="nav-item nav-link " [routerLink]="['/suppliers']" routerLinkActive="active">
+          <i class="fas fa-question-circle"></i>
+          <span translate>Suppliers</span>
+        </a>
+        <a class="nav-item nav-link" [routerLink]="['/products']" routerLinkActive="router-link-active"  routerLinkActive="active">
+          <i class="fas fa-question-circle"></i>
+          <span translate>Products</span>
+        </a>
+        <a class="nav-item nav-link " routerLinkActive="active">
+          <i class="fas fa-question-circle"></i>
+          <span translate>Accounts</span>
+        </a>
+
+        <li ngbDropdown class="nav-item">
+          <a href (click)="false" class="nav-link" ngbDropdownToggle>Master Data</a>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>Stock Types</button>
+            <button ngbDropdownItem>Roles</button>
+            <button [routerLink]="['/master-data/shift-works']"  ngbDropdownItem>Shift Works</button>
+            <button [routerLink]="['/master-data/users']" routerLinkActive="router-link-active"  ngbDropdownItem>Users</button>
+
+          </div>
+        </li>
+      </div>
+    </div>
+  </nav>
+</header>

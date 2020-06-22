@@ -1,0 +1,69 @@
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4>Shift Works</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button (click)="onOpenFormModal(shiftWorkModal)" class="btn btn-primary">New Shift</button>
+    </div>
+  </div>
+</div>
+
+
+<div class = "container">
+  <div class = "card">
+    <div class = "card-body">
+        <table class="table table-bordered">
+          <thead class="bg-primary" style="color: white;">
+            <tr >
+              <th>No</th>
+              <th>Shift</th>
+              <th>Date Created</th>
+              <th>Date Updated</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="shiftWorks$ | async as shiftWorks">
+            <ng-container *ngIf="shiftWorks.length > 0  else noData" >
+              <tr *ngFor="let shift of shiftWorks">
+                <td>{{shift.id}}</td>
+                <td>{{shift.shift}}</td>
+                <td>{{shift.date_created | date : 'dd/MM/yyyy'}}</td>
+                <td>{{shift.date_updated | date : 'dd/MM/yyyy'}}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <td  class="text-center" colspan="6">No Data</td>
+            </ng-template>
+
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+<ng-template #shiftWorkModal let-modal>
+  <div class="modal-header bg-primary" style="color: white;" >
+    <h4 class="modal-title" id="modal-basic-title">Product Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="shiftWormForm">
+      <div class="form-group row">
+        <label class="col-2 col-form-label"> Shifts </label>
+        <div class="input-group col-10">
+          <input id="product" type="text" formControlName="shift"  class="form-control" placeholder="Shift">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="onSubmit(shiftWormForm.value)" >Save</button>
+  </div>
+</ng-template>
+
+

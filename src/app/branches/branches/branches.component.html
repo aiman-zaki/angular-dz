@@ -1,0 +1,102 @@
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4>Branches</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button class="btn btn-primary">New Branch</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row" *ngIf="branches$ | async as branches">
+    <ng-container *ngIf="branches.length > 0; else noData">
+      <div class="col-12">
+        <div class = "card">
+          <div class = "card-body">
+            <div class="row">
+              <div class="col-1">
+                <span>No</span>
+              </div>
+              <div class="col-2">
+                <span>Branch</span>
+              </div>
+              <div class="col-2">
+                <span>Address</span>
+              </div>
+              <div class="col-2">
+                <span>Date Created</span>
+              </div>
+              <div class="col-2">
+                <span>Date Inserted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" *ngFor="let branch of branches">
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-1">
+                <span>{{branch.id}}</span>
+              </div>
+              <div class="col-2">
+                <span>{{branch.branch}}</span>
+              </div>
+              <div class="col-2">
+                <span>{{branch.address}}</span>
+              </div>
+              <div class="col-2">
+                <span>{{branch.date_created | date:'dd/MM/yyyy'}}</span>
+              </div>
+              <div class="col-2">
+                <span>{{branch.date_updated | date:'dd/MM/yyyy'}}</span>
+              </div>
+              <div class="col-2">
+                <button (click)="onNaviateToStock(branch)" routerLinkActive="router-link-active"  class="btn btn-info">Stock</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-template #noData></ng-template>
+
+<!--
+
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead class="bg-primary" style="color: white;">
+          <tr>
+            <th>No</th>
+            <th>Branch</th>
+            <th>Address</th>
+            <th>Date Created</th>
+            <th>Date Inserted</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="branches$ | async as branches">
+          <ng-container *ngIf="branches.length > 0; else noData">
+            <tr *ngFor="let product of branches">
+              <td>{{ product.id }}</td>
+              <td>{{ product.branch }}</td>
+              <td>{{ product.address }}</td>
+              <td>{{ product.date_created | date: "dd/MM/yyyy" }}</td>
+              <td>{{ product.date_updated | date: "dd/MM/yyyy" }}</td>
+            </tr>
+          </ng-container>
+          <ng-template #noData>
+            <td class="text-center" colspan="6">No Data</td>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+-->

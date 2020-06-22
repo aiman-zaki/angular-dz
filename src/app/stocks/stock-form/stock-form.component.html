@@ -1,0 +1,216 @@
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4 *ngIf="!isUpdate">New Stock Form</h4>
+      <h4 *ngIf="isUpdate">Update Stock Form</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button
+        [routerLink]="['/stocks']"
+        routerLinkActive="router-link-active"
+        class="btn btn-warning"
+      >
+        <fa-icon [icon]="faArrowLeft"></fa-icon> Back
+      </button>
+      &nbsp;
+      <button
+        [disabled]="!stockForm.valid"
+        (click)="onSave(entity)"
+        class="btn btn-primary"
+      >
+        <fa-icon [icon]="faSave"></fa-icon> Save
+      </button>
+      &nbsp;
+      <button *ngIf="isUpdate" class="btn btn-danger">
+        <fa-icon [icon]="faTrash"></fa-icon> Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <form #stockForm="ngForm">
+    <div class="alert alert-info">
+      <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Stock Date </label>
+        <div class="input-group col-sm-2">
+          <input
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            ngbDatepicker
+            name="stock_date"
+            #d="ngbDatepicker"
+            [(ngModel)]="this.entity.stock_date"
+            required
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary calendar"
+              (click)="d.toggle()"
+              type="button"
+            >
+              <fa-icon [icon]="faCalender"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Branch </label>
+        <div class="input-group col-sm-2">
+          <select
+            name="branch_id"
+            [(ngModel)]="this.entity.branch_id"
+            class="custom-select"
+            required
+          >
+            <ng-container *ngFor="let branch of branch$ | async; let i = index">
+              <option value="{{ branch.id }}">{{ branch.branch }}</option>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Worker </label>
+        <div class="input-group col-sm-2">
+          <select
+            name="user_id"
+            [(ngModel)]="this.entity.user_id"
+            class="custom-select"
+            required
+          >
+            <ng-container *ngFor="let user of users$ | async">
+              <option value="{{ user.id }}">{{ user.first_name }}</option>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label name="shift_id" class="col-sm-1 col-form-label">Shift </label>
+        <div class="input-group col-sm-2">
+          <select
+            [(ngModel)]="this.entity.shift_work_id"
+            name="shift_id"
+            class="custom-select"
+            required
+          >
+            <ng-container *ngFor="let shift of shift$ | async">
+              <option value="{{ shift.id }}">{{ shift.shift }}</option>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Expenses </label>
+        <div class="input-group col-sm-2">
+          <input
+            name="expenses"
+            [(ngModel)]="this.entity.expenses"
+            type="text"
+            placeholder="RM : 00000"
+            required
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-1 col-form-label">Collection </label>
+        <div class="input-group col-sm-2">
+          <input
+            required
+            name="collection"
+            type="text"
+            placeholder="RM : 00000"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="card" *ngIf="showProducts">
+      <div class="card-header bg-info" style="color: whitesmoke;">
+        <h4>Products Form</h4>
+      </div>
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+            <ng-container>
+              <table class="table table-bordered">
+                <thead class="bg-light">
+                  <th>No</th>
+                  <th>Product</th>
+                  <th  >
+                     IN
+                  </th>
+                  <th *ngIf="isPrevRecordExist"  > YESTERDAY</th>
+                  <th class="bg-success" style="color:whitesmoke" *ngIf="isPrevRecordExist"  > TOTAL</th>
+                  <th class="bg-danger" style="color:whitesmoke" > BALANCE</th>
+                </thead>
+                <tbody *ngIf="!isUpdate && products$ | async as products">
+                  <tr *ngFor="let product of products; let i = index">
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.product }}</td>
+                    <td>
+                      <div class="input-group">
+                        <input
+                        [ngModelOptions]="{standalone: true}"
+                          [(ngModel)]="entity.stock_products[i].stock_in"
+                          [name]="entity.stock_products[i].stock_in"
+                          required
+                          type="number"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group">
+                        <input
+                        [ngModelOptions]="{standalone: true}"
+
+                          [(ngModel)]="entity.stock_products[i].stock_balance"
+                          [name]="entity.stock_products[i].stock_balance"
+                          required
+                          type="number"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="isUpdate">
+                  <tr *ngFor="let sp of entity.stock_products; let i = index">
+                    <ng-container
+                      *ngIf="onReturnProduct(sp.product_id) | async as product"
+                    >
+                      <td>{{ product.id }}</td>
+                      <td>{{ product.product }}</td>
+                      <td>
+                        <div class="input-group">
+                          <input
+                          [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="entity.stock_products[i].stock_in"
+                            [name]="entity.stock_products[i].stock_in"
+                            required
+                            type="number"
+                          />
+                        </div>
+                      </td>
+                      <td *ngIf="isPrevRecordExist">{{this.entity.stock_products[i].stock_balance}}</td>
+                      <td *ngIf="isPrevRecordExist">{{this.entity.stock_products[i].stock_balance+this.entity.stock_products[i].stock_in}}</td>
+                      <td>
+                        <div class="input-group">
+                          <input
+                          [ngModelOptions]="{standalone: true}"
+
+                            [(ngModel)]="entity.stock_products[i].stock_balance"
+                            [name]="entity.stock_products[i].stock_balance"
+                            required
+                            type="number"
+                          />
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

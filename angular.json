@@ -66,7 +66,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-dz:build"
+            "browserTarget": "angular-dz:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -123,6 +124,11 @@
           }
         }
       }
-    }},
-  "defaultProject": "angular-dz"
+    }
+  },
+  "defaultProject": "angular-dz",
+  "cli": {
+    "analytics": "12be536e-3eaf-45bf-8a20-3c4bb36f8f81",
+    "defaultCollection": "@datorama/akita"
+  }
 }
