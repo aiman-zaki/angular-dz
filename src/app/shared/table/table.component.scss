@@ -1,0 +1,35 @@
+
+th[sortable]{
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+th.desc:after,
+th.asc:after {
+  font-family: 'Font Awesome\ 5 Free';
+  content: "\f062";
+  background-size: 22px;
+  float: right;
+}
+
+th.desc:after {
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+}
+
+
+.fixed-table{
+  table-layout:fixed;
+}
+
+.table-bordered th {
+  border-top-color: rgb(222, 226, 230);
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
+thead{
+  background-color: rgb(222, 226, 230);
+  padding: 10px;
+  color: 1px solid #dee2e6
+}

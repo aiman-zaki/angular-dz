@@ -1,1 +1,36 @@
-<p>suppliers works!</p>
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
+      <h4>Suppliers</h4>
+    </div>
+    <div class="col" style="text-align: right;">
+      <button  class="btn btn-primary">New Suppliers</button>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-10">
+
+        </div>
+        <div class="col-2">
+          <select [(ngModel)]="page" (change)="onPerPage($event)" class="custom-select">
+            <option value="5" selected>5 per pages</option>
+            <option value="10">10 per pages</option>
+            <option value="15">15 per pages</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <app-table [state$]="searchSubject$.asObservable()" (buttonsHandler)="onButtonHandler($event)" [buttons]="buttons"
+        [columns]="columns" [url]="url" [length$]="lengthSubject$.asObservable()" [dateFormats]="formats"
+        [length$]="lengthSubject$.asObservable()">
+      </app-table>
+    </div>
+  </div>
+</div>

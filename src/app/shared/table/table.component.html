@@ -1,0 +1,63 @@
+<table  class="table" class="table table-bordered table-hover fixed-table ">
+  <thead class="thead-dark">
+    <tr>
+      <ng-container *ngFor="let column of columns,let i = index">
+        <th
+          [style]="column.customStyle"
+          sortable
+          *ngIf="column.orderable else notOrderable"
+          [sortable]="i" [index]="i"  (click)="i"  (sort)="onSorting($event)">{{ column.data[0].toUpperCase()+column.data.slice(1) }}
+        </th>
+        <ng-template #notOrderable>
+          <th
+          [style]="column.customStyle"
+
+          >{{ column.customHeaderText !== null ? column.customHeaderText :column.data[0].toUpperCase()+column.data.slice(1) }}
+        </th>
+        </ng-template>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody  *ngIf="loading$ | async">
+    <ng-container  *ngIf="entity.data !== undefined || entity.data.length > 0 else noData">
+      <ng-container  *ngFor="let data of entity.data; let i = index">
+        <tr data-toggle="collapse" data-toggle="collapse"  [attr.data-target]="'#collapse'+data.id"  aria-expanded="false" aria-controls="collapseExample">
+          <ng-container *ngFor="let column of columns,let y = index">
+            <td [style]="column.customStyle">
+              <ng-container *ngIf="column.data.includes('id') else notId">
+                <ng-container *ngFor="let button of buttons,let z = index">
+                  <button (click)="onButtonsAction(z,data[column.data])" [class]="button.buttonClass">
+                    <fa-icon [icon]="button.icon"></fa-icon> {{button.text}}
+                  </button>
+                </ng-container>
+              </ng-container>
+              <ng-template #notId>
+                <ng-container>
+                  <ng-container *ngIf="column.isObject else notObject">
+                    {{data[column['data'][column.objectKey]]}}
+                  </ng-container>
+                  <ng-template #notObject>
+                    <ng-container *ngIf="onCheckFormatIndex(y) >= 0 else notDate">
+                      {{onConvertDataToDate(data[column['data']]) | date:dateFormats[this.temp].format}}
+                    </ng-container>
+                    <ng-template #notDate>
+                      {{data[column['data']] }}
+                    </ng-template>
+                  </ng-template>
+                </ng-container>
+              </ng-template>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </ng-container>
+    <ng-template #noData>
+      <tr>
+        <td [colSpan]="columns.length" style="text-align: center;">No Data</td>
+      </tr>
+  </ng-template>
+  </tbody>
+</table>
+<ng-template [ngIf]="loading$ | async">
+  <app-pagination [state]="paginationState$.asObservable()" (navigate)="onNavigate($event)" [pagination$]="pagination$.asObservable()"></app-pagination>
+</ng-template>

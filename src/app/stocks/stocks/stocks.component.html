@@ -11,12 +11,35 @@
   </div>
 </div>
 
+<div class="col-3">
+  <div class="card">
+    <div class="card-header bg-success" style="color: whitesmoke;">
+      <h4>Today Stocks</h4>
+    </div>
+    <div class="card-body">
+      <ng-container *ngIf="branch$ | async; else noToday">
+        <div class="row p-3">
+          <div class="col"  *ngFor="let branch of branch$ | async">
+                <span *ngIf="onCheckTodayStockAndBranch(branch.id) else notCheck"><fa-icon [icon]="faCheck"></fa-icon> </span>
+                <ng-template #notCheck>
+                  <span><fa-icon [icon]="faCross"></fa-icon></span>
+                </ng-template>
+                <span> {{ branch.branch }} </span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noToday>
+        <h4>Data</h4>
+      </ng-template>
+    </div>
+  </div>
+</div>
 <div class="p-3">
   <div class="row" *ngIf="stocks$ | async as stocks">
     <ng-container *ngIf="stocks.length > 0; else noData">
       <div class="col-12">
-        <div class ="card bg-primary" style="color: white;">
-          <div class ="card-body">
+        <div class="card bg-primary" style="color: white;">
+          <div class="card-body">
             <div class="row">
               <div class="col-1">
                 <span><fa-icon [icon]="faCalendar"></fa-icon> Stock Date</span>
@@ -31,43 +54,66 @@
                 <span><fa-icon [icon]="faClock"></fa-icon> Shift Work</span>
               </div>
               <div class="col-1">
-                <span><fa-icon [icon]="faCalendar"></fa-icon> Date Inserted</span>
+                <span
+                  ><fa-icon [icon]="faCalendar"></fa-icon> Date Inserted</span
+                >
               </div>
               <div class="col-1">
-                <span><fa-icon [icon]="faCalendar"></fa-icon> Date Updated</span>
+                <span
+                  ><fa-icon [icon]="faCalendar"></fa-icon> Date Updated</span
+                >
               </div>
             </div>
           </div>
         </div>
-        <div class="card mt-2" *ngFor="let stock of stocks">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-1">
-                <span>{{ stock.stock_date | date: "dd/MM/yyyy" }}</span>
-              </div>
-              <div class="col-1">
-                <span>{{ stock.branch.branch }}</span>
-              </div>
-              <div class="col-1">
-                <span>{{ stock.user.first_name }}</span>
-              </div>
-              <div class="col-1">
-                <span>{{ stock.shift_work.shift }}</span>
-              </div>
-              <div class="col-1">
-                <span>{{ stock.date_created | date: "dd/MM/yyyy" }}</span>
-              </div>
-              <div class="col-1">
-                <span>{{ stock.date_updated | date: "dd/MM/yyyy" }}</span>
-              </div>
-              <div class="col" style="text-align: right;">
-                <button type="button" (click)="onViewStockForm(stock.id)" class="btn btn-primary btn-sm"> <fa-icon [icon]="faEye"></fa-icon> View </button>
+        <ng-container *ngFor="let stock of stocks">
+          <ng-container>
+            <div class="card mt-2">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-1">
+                    <span>{{ stock.stock_date | date: "dd/MM/yyyy" }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>{{ stock.branch.branch }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>{{ stock.user.first_name }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>{{ stock.shift_work.shift }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>{{ stock.date_created | date: "dd/MM/yyyy" }}</span>
+                  </div>
+                  <div class="col-1">
+                    <span>{{ stock.date_updated | date: "dd/MM/yyyy" }}</span>
+                  </div>
+                  <div class="col" style="text-align: right;">
+                    <button
+                      type="button"
+                      (click)="onViewStockForm(stock.id)"
+                      class="btn btn-primary btn-sm"
+                    >
+                      <fa-icon [icon]="faEye"></fa-icon> View
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #noData>
+      <div class = "container-fluid">
+        <div class = "card">
+          <div class = "card-body">
+              <h4 class="text-center"><fa-icon [icon]="faInfoCircle"></fa-icon> No Data</h4>
           </div>
         </div>
       </div>
-    </ng-container>
+    </ng-template>
+
   </div>
 </div>
-<ng-template #noData></ng-template>

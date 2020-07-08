@@ -29,16 +29,20 @@
           <i class="fas fa-question-circle"></i>
           <span translate>Products</span>
         </a>
-        <a class="nav-item nav-link " routerLinkActive="active">
-          <i class="fas fa-question-circle"></i>
-          <span translate>Accounts</span>
-        </a>
+        <li ngbDropdown class="nav-item">
+          <a href (click)="false" class="nav-link" ngbDropdownToggle>Financials</a>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>Daily Expenses & Collections</button>
+            <button ngbDropdownItem>Debt</button>
+
+
+          </div>
+        </li>
 
         <li ngbDropdown class="nav-item">
           <a href (click)="false" class="nav-link" ngbDropdownToggle>Master Data</a>
           <div ngbDropdownMenu>
-            <button ngbDropdownItem>Stock Types</button>
-            <button ngbDropdownItem>Roles</button>
+            <button  [routerLink]="['/master-data/roles']"  ngbDropdownItem>Roles</button>
             <button [routerLink]="['/master-data/shift-works']"  ngbDropdownItem>Shift Works</button>
             <button [routerLink]="['/master-data/users']" routerLinkActive="router-link-active"  ngbDropdownItem>Users</button>
 

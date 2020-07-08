@@ -1,10 +1,10 @@
 <div class="container-fluid bg-light page-header">
   <div class="row">
     <div class="col">
-      <h4>Branches</h4>
+      <h4>Roles</h4>
     </div>
     <div class="col" style="text-align: right;">
-      <button (click)="onButtonHandler({id:'',index:'4'})"class="btn btn-primary"> <fa-icon [icon]="faPlus"> </fa-icon> New Branch</button>
+      <button (click)="onButtonHandler({id:'',index:4})" class="btn btn-primary"><fa-icon [icon]="faPlusCircle"></fa-icon> New Role</button>
     </div>
   </div>
 </div>
@@ -34,37 +34,32 @@
   </div>
 </div>
 
-<ng-template #branchFormModal let-modal>
-  <div class="modal-header" [ngClass]="{'bg-primary':buttonIndex == 0,'bg-success':buttonIndex == 2,'bg-info':buttonIndex == 4}" style="color: white;">
-    <h4 class="modal-title" id="modal-basic-title">
-      <span *ngIf="buttonIndex == 0">View Branch Details</span>
-      <span *ngIf="buttonIndex == 2">Update Branch Details</span>
-      <span *ngIf="buttonIndex == 4">Add Branch Details</span>
 
-    </h4>
+<ng-template #modal let-modal>
+  <div class="modal-header" [ngClass]="{'bg-primary':buttonIndex == 0,'bg-success':buttonIndex == 2,'bg-info':buttonIndex == 4}"  style="color: white;">
+    <h4 class="modal-title" id="modal-basic-title">Roles Details</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="branchForm">
+    <form [formGroup]="form">
       <div class="form-group row">
-        <label class="col-2 col-form-label"> Branch </label>
-        <div class="input-group col-10">
-          <input id="product" type="text" [(ngModel)]="entity.branch" formControlName="branch" class="form-control">
+        <label class="col-3 col-form-label"> KEY </label>
+        <div class="input-group col-9">
+          <input id="product" type="text"  formControlName="key" class="form-control">
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-2 col-form-label"> Address </label>
-        <div class="input-group col-10">
-          <input id="product" type="text" [(ngModel)]="entity.address" formControlName="address" class="form-control" >
+        <label class="col-3 col-form-label"> TEXT </label>
+        <div class="input-group col-9">
+          <input id="product" type="text" formControlName="text" class="form-control">
         </div>
       </div>
+
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" *ngIf="buttonIndex == 2" class="btn btn-outline-dark" (click)="onSubmit(branchForm.value)">Save</button>
-    <button type="button" *ngIf="buttonIndex == 4" class="btn btn-outline-dark" (click)="onSubmit(branchForm.value)">Confirm</button>
-
+    <button type="button" *ngIf="buttonIndex == 2 || buttonIndex == 4" class="btn btn-outline-dark" (click)="onSubmit(form.value)">Save</button>
   </div>
 </ng-template>

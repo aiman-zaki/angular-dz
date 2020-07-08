@@ -1,82 +1,79 @@
-<div class = "container-fluid bg-light page-header">
-  <div class = "row">
-    <div class = "col">
+<div class="container-fluid bg-light page-header">
+  <div class="row">
+    <div class="col">
       <h4>Products</h4>
     </div>
-    <div class = "col" style="text-align: right;">
-      <button class = "btn btn-primary"  (click)="open(productFormModal)">New Product</button>
+    <div class="col" style="text-align: right;">
+      <button class="btn btn-primary" (click)="onButtonHandler({id:'',index:4})"><fa-icon [icon]="faPlusCircle"></fa-icon> New Product</button>
     </div>
   </div>
 </div>
-<div class = "container">
-  <div class = "card">
-    <div class = "card-body">
-        <table class="table table-bordered">
-          <thead class="bg-primary" style="color: white;">
-            <tr >
-              <th>No</th>
-              <th>Product</th>
-              <th>Cost Price</th>
-              <th>Sell Price</th>
-              <th>Date Created</th>
-              <th>Date Inserted</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="products$ | async as products">
-            <ng-container *ngIf="products.length > 0  else noData" >
-              <tr *ngFor="let product of products">
-                <td>{{product.id}}</td>
-                <td>{{product.product}}</td>
-                <td>{{product.cost_price}}</td>
-                <td>{{product.sale_price}}</td>
-                <td>{{product.date_created | date : 'dd/MM/yyyy'}}</td>
-                <td>{{product.date_updated | date : 'dd/MM/yyyy'}}</td>
-              </tr>
-            </ng-container>
-            <ng-template #noData>
-              <td  class="text-center" colspan="6">No Data</td>
-            </ng-template>
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-3">
+          <form>
+            <div class="input-group mb-3">
 
-          </tbody>
-        </table>
+              <input type="text"  name="product"[(ngModel)]="search[0].searchParam" class="form-control" placeholder="Product" aria-label="Username"
+                aria-describedby="basic-addon1">
+            </div>
+          </form>
+        </div>
+        <div class = "col-7">
+          <button type="button" (click)="onSearch()" class="btn btn-primary"><fa-icon [icon]="faSearch"></fa-icon> Search</button>
+        </div>
+        <div class="col-2">
+          <select [(ngModel)]="page" (change)="onPerPage($event)" class="custom-select">
+            <option value="5" selected>5 per pages</option>
+            <option value="10">10 per pages</option>
+            <option value="15">15 per pages</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
+    <div class="card-body">
+      <app-table [state$]="searchSubject$.asObservable()" (buttonsHandler)="onButtonHandler($event)" [buttons]="buttons"
+        [columns]="columns" [url]="url" [length$]="lengthSubject$.asObservable()" [dateFormats]="formats"
+        [length$]="lengthSubject$.asObservable()">
+      </app-table>
+    </div>
 
-<ng-template #productFormModal let-modal>
-  <div class="modal-header bg-primary" style="color: white;" >
-    <h4 class="modal-title" id="modal-basic-title">Product Details</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
   </div>
-  <div class="modal-body">
-    <form [formGroup]="productForm">
-      <div class="form-group row">
-        <label class="col-2 col-form-label"> Product </label>
-        <div class="input-group col-10">
-          <input id="product" type="text" formControlName="product" class="form-control" >
+
+  <ng-template #modal let-modal>
+    <div class="modal-header" [ngClass]="{'bg-primary':buttonIndex == 0,'bg-success':buttonIndex == 2,'bg-info':buttonIndex == 4}"  style="color: white;">
+      <h4 class="modal-title" id="modal-basic-title">Product Details</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="productForm">
+        <div class="form-group row">
+          <label class="col-3 col-form-label"> Product </label>
+          <div class="input-group col-9">
+            <input id="product" type="text"  formControlName="product" class="form-control">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-2 col-form-label"> Cost Price </label>
-        <div class="input-group col-10">
-          <input id="product" type="text" formControlName="cost_price"  class="form-control" placeholder="Cost Price">
+        <div class="form-group row">
+          <label class="col-3 col-form-label"> Cost Price </label>
+          <div class="input-group col-9">
+            <input id="product" type="text" formControlName="cost_price" class="form-control" placeholder="Cost Price">
+          </div>
         </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-2 col-form-label"> Sell Price </label>
-        <div class="input-group col-10">
-          <input id="product" type="text" formControlName="sell_price"  class="form-control" placeholder="Sell Price">
+        <div class="form-group row">
+          <label class="col-3 col-form-label"> Sell Price </label>
+          <div class="input-group col-9">
+            <input id="product" type="text"   formControlName="sale_price" class="form-control" placeholder="Sell Price">
+          </div>
         </div>
-      </div>
 
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark"  (click)="onSubmit(productForm.value,modal)">Save</button>
-  </div>
-</ng-template>
-
-
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" *ngIf="buttonIndex == 2" class="btn btn-outline-dark" (click)="onSubmit(productForm.value)">Save</button>
+    </div>
+  </ng-template>

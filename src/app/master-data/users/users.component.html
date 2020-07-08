@@ -4,48 +4,68 @@
       <h4>Users</h4>
     </div>
     <div class="col" style="text-align: right;">
-      <button class="btn btn-primary">New User</button>
+      <button (click)="onButtonHandler({id:'',index:4})" class="btn btn-primary"><fa-icon [icon]="faPlusCircle"></fa-icon> New User</button>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-10">
+
+        </div>
+        <div class="col-2">
+          <select [(ngModel)]="page" (change)="onPerPage($event)" class="custom-select">
+            <option value="5" selected>5 per pages</option>
+            <option value="10">10 per pages</option>
+            <option value="15">15 per pages</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <app-table [state$]="searchSubject$.asObservable()" (buttonsHandler)="onButtonHandler($event)" [buttons]="buttons"
+        [columns]="columns" [url]="url" [length$]="lengthSubject$.asObservable()" [dateFormats]="formats"
+        [length$]="lengthSubject$.asObservable()">
+      </app-table>
     </div>
   </div>
 </div>
 
 
-<div class = "container">
-  <div class = "card">
-    <div class = "card-body">
-        <table class="table table-bordered">
-          <thead class="bg-primary" style="color: white;">
-            <tr >
-              <th>No</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Salary</th>
-              <th>Date Created</th>
-              <th>Date Updated</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="users$ | async as users">
-            <ng-container *ngIf="users.length > 0  else noData" >
-              <tr *ngFor="let product of users">
-                <td>{{product.id}}</td>
-                <td>{{product.first_name}}</td>
-                <td>{{product.last_name}}</td>
-                <td>{{product.salary}}</td>
-                <td>{{product.date_created | date : 'dd/MM/yyyy'}}</td>
-                <td>{{product.date_updated | date : 'dd/MM/yyyy'}}</td>
-                <td>{{product.role.text }}</td>
-              </tr>
-            </ng-container>
-            <ng-template #noData>
-              <td  class="text-center" colspan="6">No Data</td>
-            </ng-template>
-
-          </tbody>
-        </table>
-    </div>
+<ng-template #modal let-modal>
+  <div class="modal-header" [ngClass]="{'bg-primary':buttonIndex == 0,'bg-success':buttonIndex == 2,'bg-info':buttonIndex == 4}"  style="color: white;">
+    <h4 class="modal-title" id="modal-basic-title">Users Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-</div>
+  <div class="modal-body">
+    <form [formGroup]="form">
+      <div class="form-group row">
+        <label class="col-3 col-form-label"> First Name </label>
+        <div class="input-group col-9">
+          <input id="product" type="text"  formControlName="first_name" class="form-control">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-3 col-form-label"> Last Name </label>
+        <div class="input-group col-9">
+          <input id="product" type="text" formControlName="last_name" class="form-control">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-3 col-form-label"> Salary </label>
+        <div class="input-group col-9">
+          <input id="product" type="number" formControlName="salary" class="form-control">
+        </div>
+      </div>
 
-
-
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="buttonIndex == 2 || buttonIndex == 4" class="btn btn-outline-dark" (click)="onSubmit(form.value)">Save</button>
+  </div>
+</ng-template>

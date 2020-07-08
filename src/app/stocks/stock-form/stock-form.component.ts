@@ -1,7 +1,7 @@
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder,FormArray } from '@angular/forms';
-import { StockFormModel, StockProduct } from './stock-form.model';
+import { StockFormModel, StockProduct, Expenses } from './stock-form.model';
 import { ShiftWorksService } from './../../master-data/shift-works/state/shift-works.service';
 import { ShiftWorksQuery } from './../../master-data/shift-works/state/shift-works.query';
 import { UsersQuery } from './../../master-data/users/state/users.query';
@@ -11,9 +11,9 @@ import { StockTypesService } from '../../master-data/stock-types/state/stock-typ
 import { StocksService } from './../state/stocks.service';
 import { ProductsService } from './../../products/state/products.service';
 import { ProductsQuery } from './../../products/state/products.query';
-import { Observable, forkJoin,combineLatest } from 'rxjs';
+import { Observable, forkJoin, combineLatest, BehaviorSubject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { faCalendar,faArrowLeft,faSave,faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar,faArrowLeft,faSave,faTrash,faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { Product } from 'src/app/products/state/product.model';
 import { Branch } from 'src/app/branches/state/branch.model';
 import { BranchesQuery } from 'src/app/branches/state/branches.query';
@@ -35,7 +35,7 @@ export class StockFormComponent implements OnInit {
   faArrowLeft = faArrowLeft
   faSave = faSave
   faTrash = faTrash
-
+  faPlus= faPlusCircle
   products$:Observable<Product[]>
   branch$:Observable<Branch[]>
   stockTypes$:Observable<StockType[]>
@@ -57,9 +57,13 @@ export class StockFormComponent implements OnInit {
   showProducts:boolean
   datePipeEn: DatePipe = new DatePipe('en-US');
   isUpdate:boolean = false
-  isPrevRecordExist:boolean = false
+  isPrevRecordExistSubject$:BehaviorSubject<boolean> = new BehaviorSubject(false)
+  isPrevRecordExist$:Observable<boolean> = this.isPrevRecordExistSubject$.asObservable()
+  id:string
 
+  expensesList:Expenses[] = []
 
+  totalProfit:number = 0
   constructor(
     private service:StocksService,
     private productsQuery:ProductsQuery,
@@ -79,6 +83,36 @@ export class StockFormComponent implements OnInit {
 
   ) {
     this.showProducts = false
+  }
+
+  onAddExpenses(){
+    this.expensesList.push({
+      expenses:0,
+      reason:"",
+    })
+  }
+
+  onTotalNetProfit(profit:number){
+    this.totalProfit += profit
+    return profit
+  }
+
+  onDelete(){
+    this.service.remove(this.id).subscribe(res => {
+      this.router.navigateByUrl("/stocks")
+    })
+  }
+
+  onDateChange($event){
+    console.log($event)
+    this.entity.branch_id = null
+  }
+
+  onBranchChange($event){
+    console.log($event)
+    if(this.entity.branch_id !== undefined){
+      this.onGetPrevRecord()
+    }
   }
 
   onGetPrevStock(productId:number,entity:StockFormModel){
@@ -108,12 +142,13 @@ export class StockFormComponent implements OnInit {
     let prevDate = cloneDeep(this.entity.stock_date)
     prevDate.setDate(prevDate.getDate()-1)
     //Need to fix backend wih error
-    this.service.getStockProducstFilter( prevDate.toISOString()).
+    this.service.getStockProducstFilter(prevDate.toISOString(),this.entity.branch_id).
       subscribe(res => {
         if (res.stock_products == null ){
+          this.isPrevRecordExistSubject$.next(false)
           this.toastService.showErrorMessage("No previous day Records found")
         } else {
-          this.isPrevRecordExist = true
+          this.isPrevRecordExistSubject$.next(true)
           this.prevEntity = res
           this.prevEntity.stock_date = new Date(res.stock_date)
           this.toastService.showSuccessMessage("Previous day Records found")
@@ -142,18 +177,20 @@ export class StockFormComponent implements OnInit {
 
       for(let i=0 ; i<products.length;i++){
         this.entity.stock_products.push({
-          product_id:products[i].id
+          product_id:products[i].id,
+          stock_balance:0,
+          stock_in:0,
 
         })
       }
 
-      let id = this.route.snapshot.params["id"]
-      if (id !== undefined){
-        this.service.getStockProducts(id).subscribe(entity => {
+      this.id = this.route.snapshot.params["id"]
+      if (this.id !== undefined){
+        this.service.getStockProducts(this.id).subscribe(entity => {
           this.entity = entity
           this.entity.stock_date = new Date(entity.stock_date)
           this.isUpdate = true
-          this.onReturnProduct(this.entity.stock_products[0].product_id)
+          //this.onReturnProduct(this.entity.stock_products[0].product_id)
           this.onGetPrevRecord()
         })
       }

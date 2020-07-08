@@ -1,3 +1,6 @@
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,6 +13,10 @@ import { BranchesService } from './state/branches.service'
   imports: [
     CommonModule,
     BranchesRoutingModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FontAwesomeModule
   ],
   providers:[
 

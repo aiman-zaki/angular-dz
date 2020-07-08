@@ -14,13 +14,21 @@ export class StocksService{
   }
 
 
+
+  remove(id:string){
+    return this.httpClient.delete(`/api/stocks/${id}`).pipe(
+    tap(  this.store.remove(id))
+    )
+  }
+
+
   add(stockForm:StockFormModel){
     return this.httpClient.post("/api/stocks",stockForm)
   }
 
 
-  getStockProducstFilter(date:any){
-    return this.httpClient.get<StockFormModel>(`/api/stocks/stock-products/filters?prevDate=${date}`)
+  getStockProducstFilter(date:any,branchId:number){
+    return this.httpClient.get<StockFormModel>(`/api/stocks/stock-products/filters?prevDate=${date}&branchId=${branchId}`)
   }
 
 

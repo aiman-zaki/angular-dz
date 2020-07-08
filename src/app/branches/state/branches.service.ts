@@ -11,6 +11,10 @@ export class BranchesService {
 
   }
 
+  getById(id:string){
+    return this.httpClient.get<Branch>(`/api/branches/${id}`)
+  }
+
   get(){
     return this.httpClient.get<Branch[]>("/api/branches").pipe(
       tap(res => this.store.set(res))
@@ -26,8 +30,10 @@ export class BranchesService {
 
   }
 
-  update(){
-
+  update(branch:Branch){
+    return this.httpClient.put<Branch>(`/api/branches/${branch.id}`,branch).pipe(
+      tap(res => this.store.add(branch))
+    )
   }
 
 }

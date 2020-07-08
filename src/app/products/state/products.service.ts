@@ -11,6 +11,10 @@ export class ProductsService  {
 
   }
 
+  getById(id) {
+    return this.http.get<Product>(`api/products/${id}`)
+  }
+
   get() {
     return this.http.get<Product[]>('api/products')
         .pipe(
@@ -25,8 +29,8 @@ export class ProductsService  {
     )
   }
 
-  update(id,product:Product){
-    this.store.update(id,product)
+  update(product:Product){
+    return this.http.put<Product>(`/api/products/${product.id}`,product)
   }
 
   remove(id:ID){

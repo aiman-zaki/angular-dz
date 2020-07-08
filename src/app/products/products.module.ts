@@ -1,3 +1,5 @@
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SharedModule } from './../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
@@ -13,8 +15,10 @@ import { ProductsComponent } from './products/products.component';
     CommonModule,
     ProductsRoutingModule,
     NgbModule,
+    SharedModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FontAwesomeModule
   ]
 })
 export class ProductsModule { }

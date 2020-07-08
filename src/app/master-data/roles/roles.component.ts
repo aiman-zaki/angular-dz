@@ -1,35 +1,72 @@
+import { RolesService } from './state/roles.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
-import { faEye,faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEye,faTrash,faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-suppliers',
-  templateUrl: './suppliers.component.html',
-  styleUrls: ['./suppliers.component.scss']
+  selector: 'app-roles',
+  templateUrl: './roles.component.html',
+  styleUrls: ['./roles.component.scss']
 })
-export class SuppliersComponent implements OnInit {
+export class RolesComponent implements OnInit {
+
+  @ViewChild('modal') modal : any;
+
+  faPlusCircle = faPlusCircle
+  buttonIndex = 0
+  form:FormGroup
   columns: TableColumn[] = [];
   buttons: TableButton[] = []
   formats: TableColumnDateFormat[] = []
-
   tableClass = '.fixed-table'
   search: TableColumnSearch[] = []
   searchSubject$:BehaviorSubject<TableColumnSearch[]> = new BehaviorSubject([])
   lengthSubject$:BehaviorSubject<number> = new BehaviorSubject(5)
   page:number = 5
 
-  url: string = '/api/suppliers/dtlist/5';
-  constructor() { }
+  url: string = '/api/roles/dtlist/3';
+  constructor(private modalService:NgbModal,private service:RolesService,private formBuilder:FormBuilder) { }
 
-  onButtonHandler(event){
-
+  onSubmit(formValue){
+    if(this.buttonIndex == 4){
+      this.service.add(formValue)
+    }
+    if(this.buttonIndex == 2){
+      this.service.update(formValue.id,formValue).subscribe(res => {
+        this.modalService.dismissAll()
+        this.onDataTableInit()
+      })
+    }
   }
-
 
   onPerPage(event:any){
     this.lengthSubject$.next(this.page)
 
+  }
+
+  onButtonHandler(event:any){
+    this.buttonIndex = event.index
+    if(event.index == 4){
+      this.modalService.open(this.modal)
+    }
+    if(event.index == 0){
+      this.service.get(event.id).subscribe(res => {
+        this.form = this.formBuilder.group(res)
+      })
+      this.modalService.open(this.modal)
+
+    }
+    if(event.index == 2){
+      this.service.get(event.id).subscribe(res => {
+        this.form = this.formBuilder.group(res)
+
+      })
+      this.modalService.open(this.modal)
+
+    }
   }
 
   onDataTableInit(){
@@ -79,7 +116,7 @@ export class SuppliersComponent implements OnInit {
         customHeaderText: 'Actions'
       },
       {
-        data: 'company',
+        data: 'key',
         name: '',
         searchable: true,
         orderable: true,
@@ -87,11 +124,11 @@ export class SuppliersComponent implements OnInit {
           value: '',
           regex: true,
         },
-        index: 'shift',
+        index: 'key',
         customStyle:'width:500px;font-size:14px',
       },
       {
-        data: 'person_in_charge',
+        data: 'text',
         name: '',
         searchable: true,
         orderable: true,
@@ -99,38 +136,20 @@ export class SuppliersComponent implements OnInit {
           value: '',
           regex: true,
         },
-        index: 'value',
+        index: 'text',
         customStyle:"font-size:14px"
       },
-      {
-        data: 'email',
-        name: '',
-        searchable: true,
-        orderable: true,
-        search: {
-          value: '',
-          regex: true,
-        },
-        index: 'value',
-        customStyle:"font-size:14px"
-      },
-      {
-        data: 'phone_no',
-        name: '',
-        searchable: true,
-        orderable: true,
-        search: {
-          value: '',
-          regex: true,
-        },
-        index: 'value',
-        customStyle:"font-size:14px"
-      },
+
     ];
   }
 
   ngOnInit(): void {
     this.onDataTableInit()
+    this.form = this.formBuilder.group({
+      id:"",
+      key:"",
+      text:""
+    })
   }
 
 }

@@ -1,0 +1,23 @@
+<div *ngIf="showPagination$ | async" class = "row">
+  <div class = "col p-2">
+    <span p-2>{{ display$ | async }}</span>
+  </div>
+  <div class=  "col" >
+    <nav  style="float: right;">
+      <ul class="pagination">
+        <li class="page-item" ><button [disabled]="onBackDisabled()" (click)="onNavigateBackNext(true)" class="page-link">Previous</button></li>
+        <ng-container *ngFor="let item of pageArray$ | async |slice:sliceStart:sliceEnd; let i = index">
+          <ng-container *ngIf="i < (pageLimit)">
+            <li class="page-item" [ngClass]="{'active': currentPage == item}" (click)="onNavigate(item,false)"><span class="page-link">{{ item }}</span></li>
+          </ng-container>
+          <!--
+          <ng-container *ngIf="i == (pageLimit-1)">
+            <li class="page-item" [ngClass]="{'active': currentPage == item}" (click)="onChangeSliceAndNavigate(i)"><span class="page-link">{{ item }}</span></li>
+          </ng-container>
+          -->
+        </ng-container>
+        <li class="page-item"><button [disabled]="onNextDisabled() == true"  (click)="onNavigateBackNext(false)" class="page-link">Next</button></li>
+      </ul>
+    </nav>
+  </div>
+</div>
