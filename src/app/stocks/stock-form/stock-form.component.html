@@ -30,7 +30,7 @@
               <label class="col-sm-3 col-form-label">Stock Date </label>
               <div class="input-group col">
                 <input [disabled]="isUpdate" class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker name="stock_date"
-                  #d="ngbDatepicker" [(ngModel)]="this.entity.stock_date" required (dateSelect)="onDateChange($event)" />
+                  #d="ngbDatepicker" [(ngModel)]="this.entity.record.date" required (dateSelect)="onDateChange($event)" />
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
                     <fa-icon [icon]="faCalender"></fa-icon>
@@ -41,7 +41,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">Branch </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" name="branch_id" [(ngModel)]="this.entity.branch_id" class="custom-select"
+                <select [disabled]="isUpdate" name="branch_id" [(ngModel)]="this.entity.record.branch_id" class="custom-select"
                   (change)="onBranchChange($event)" required>
                   <ng-container *ngFor="let branch of branch$ | async; let i = index">
                     <option value="{{ branch.id }}">{{ branch.branch }}</option>
@@ -52,7 +52,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">Worker </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" name="user_id" [(ngModel)]="this.entity.user_id" class="custom-select"
+                <select [disabled]="isUpdate" name="user_id" [(ngModel)]="this.entity.record.user_id" class="custom-select"
                   required>
                   <ng-container *ngFor="let user of users$ | async">
                     <option value="{{ user.id }}">{{ user.first_name }}</option>
@@ -64,7 +64,7 @@
               <label name="shift_id" class="col-sm-3 col-form-label">Shift
               </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" [(ngModel)]="this.entity.shift_work_id" name="shift_id"
+                <select [disabled]="isUpdate" [(ngModel)]="this.entity.record.shift_work_id" name="shift_id"
                   class="custom-select" required>
                   <ng-container *ngFor="let shift of shift$ | async">
                     <option value="{{ shift.id }}">{{ shift.shift }}</option>

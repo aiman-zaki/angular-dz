@@ -1,12 +1,11 @@
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { StockFormModel } from './../stock-form/stock-form.model';
+import { RecordForm,Record } from './../stock-form/stock-form.model';
 import { forkJoin, combineLatest, } from 'rxjs';
 import { ProductsQuery } from './../../products/state/products.query';
 import { StockTypesQuery } from './../../master-data/stock-types/state/stock-types.query';
 import { Injectable } from '@angular/core';
 import { StocksStore, StocksState } from './stocks.store';
-import { Stock } from './stock.model';
 @Injectable({ providedIn: 'root' })
 export class StocksService{
 
@@ -22,23 +21,23 @@ export class StocksService{
   }
 
 
-  add(stockForm:StockFormModel){
-    return this.httpClient.post("/api/stocks",stockForm)
+  add(stockForm:RecordForm){
+    return this.httpClient.post("/api/records",stockForm)
   }
 
 
-  getStockProducstFilter(date:any,branchId:number){
-    return this.httpClient.get<StockFormModel>(`/api/stocks/stock-products/filters?prevDate=${date}&branchId=${branchId}`)
+  getStockProducstFilter(date:any,branchId:number,shiftWorkId:number){
+    return this.httpClient.get<RecordForm>(`/api/records/filters?date=${date}&branchId=${branchId}&shiftWorkId=${shiftWorkId}`)
   }
 
 
   getStockProducts(id:string){
-    return this.httpClient.get<StockFormModel>(`/api/stocks/stock-products/stock/${id}`)
+    return this.httpClient.get<RecordForm>(`/api/records/${id}`)
   }
 
-  get(){
-    return this.httpClient.get<Stock[]>("/api/stocks").pipe(
-      tap(res => this.store.set(res))
+  get(page:number,pageLimit:number){
+    return this.httpClient.get<Record[]>(`/api/records?page=${page}&pageLimit=${pageLimit}`).pipe(
+      tap(res => this.store.set(res['response']))
     )
   }
 

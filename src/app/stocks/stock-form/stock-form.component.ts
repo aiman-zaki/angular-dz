@@ -1,7 +1,7 @@
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder,FormArray } from '@angular/forms';
-import { StockFormModel, StockProduct, Expenses } from './stock-form.model';
+import { RecordForm, StockProduct, Expenses } from './stock-form.model';
 import { ShiftWorksService } from './../../master-data/shift-works/state/shift-works.service';
 import { ShiftWorksQuery } from './../../master-data/shift-works/state/shift-works.query';
 import { UsersQuery } from './../../master-data/users/state/users.query';
@@ -42,16 +42,15 @@ export class StockFormComponent implements OnInit {
   users$:Observable<User[]>
   shift$:Observable<ShiftWork[]>
 
-  stockForm:FormGroup
+  recordForm:FormGroup
 
-  entity:StockFormModel = {
-    date_created: new Date(),
-    date_updated: new Date(),
+  entity:RecordForm = {
+    record:{},
+    stock_products:[]
   }
 
-  prevEntity:StockFormModel = {
-    date_created: new Date(),
-    date_updated: new Date(),
+  prevEntity:RecordForm = {
+
   }
 
   showProducts:boolean
@@ -83,6 +82,7 @@ export class StockFormComponent implements OnInit {
 
   ) {
     this.showProducts = false
+
   }
 
   onAddExpenses(){
@@ -105,17 +105,14 @@ export class StockFormComponent implements OnInit {
 
   onDateChange($event){
     console.log($event)
-    this.entity.branch_id = null
   }
 
   onBranchChange($event){
     console.log($event)
-    if(this.entity.branch_id !== undefined){
-      this.onGetPrevRecord()
-    }
+
   }
 
-  onGetPrevStock(productId:number,entity:StockFormModel){
+  onGetPrevStock(productId:number,entity:RecordForm){
     let prev = entity.stock_products.find(prev => {
       if(prev.product_id == productId){
         return true
@@ -133,16 +130,16 @@ export class StockFormComponent implements OnInit {
   onSave(entity){
       this.service.add(entity).subscribe(res => {
         this.toastService.showSuccessMessage("Stock Inserted")
-        this.router.navigateByUrl("/stocks")
+        //this.router.navigateByUrl("/stocks")
       })
 
   }
 
   onGetPrevRecord(){
-    let prevDate = cloneDeep(this.entity.stock_date)
+    let prevDate = cloneDeep(this.entity.record.date)
     prevDate.setDate(prevDate.getDate()-1)
     //Need to fix backend wih error
-    this.service.getStockProducstFilter(prevDate.toISOString(),this.entity.branch_id).
+    this.service.getStockProducstFilter(prevDate.toISOString(),this.entity.record.branch_id,this.entity.record.shift_work_id).
       subscribe(res => {
         if (res.stock_products == null ){
           this.isPrevRecordExistSubject$.next(false)
@@ -150,12 +147,11 @@ export class StockFormComponent implements OnInit {
         } else {
           this.isPrevRecordExistSubject$.next(true)
           this.prevEntity = res
-          this.prevEntity.stock_date = new Date(res.stock_date)
+          this.prevEntity.record.date = new Date(res.record.date)
           this.toastService.showSuccessMessage("Previous day Records found")
         }
       })
   }
-
   ngOnInit(): void {
 
     this.products$ = this.productsQuery.selectAll()
@@ -173,7 +169,7 @@ export class StockFormComponent implements OnInit {
 
       this.entity.stock_products = stockProducts
       this.showProducts = true
-      this.entity.stock_date = new Date()
+      this.entity.record.date = new Date()
 
       for(let i=0 ; i<products.length;i++){
         this.entity.stock_products.push({
@@ -188,9 +184,9 @@ export class StockFormComponent implements OnInit {
       if (this.id !== undefined){
         this.service.getStockProducts(this.id).subscribe(entity => {
           this.entity = entity
-          this.entity.stock_date = new Date(entity.stock_date)
+          this.entity.record.date = new Date(entity.record.date)
           this.isUpdate = true
-          //this.onReturnProduct(this.entity.stock_products[0].product_id)
+          this.onReturnProduct(this.entity.stock_products[0].product_id)
           this.onGetPrevRecord()
         })
       }
