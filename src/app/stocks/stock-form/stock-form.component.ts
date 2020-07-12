@@ -13,7 +13,7 @@ import { ProductsService } from './../../products/state/products.service';
 import { ProductsQuery } from './../../products/state/products.query';
 import { Observable, forkJoin, combineLatest, BehaviorSubject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { faCalendar,faArrowLeft,faSave,faTrash,faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar,faArrowLeft,faSave,faTrash,faPlusCircle,faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { Product } from 'src/app/products/state/product.model';
 import { Branch } from 'src/app/branches/state/branch.model';
 import { BranchesQuery } from 'src/app/branches/state/branches.query';
@@ -37,6 +37,7 @@ export class StockFormComponent implements OnInit {
   faSave = faSave
   faTrash = faTrash
   faPlus= faPlusCircle
+  faArrowRight = faArrowRight
   products$:Observable<Product[]>
   branch$:Observable<Branch[]>
   stockTypes$:Observable<StockType[]>
@@ -87,6 +88,15 @@ export class StockFormComponent implements OnInit {
 
     }
   }
+
+
+  onReturnPrevStockData(productId:string):StockProduct{
+    return this.prevEntity.stock_products.find(s => s.product_id == productId)
+  }
+
+  onCarryYesterdayToBalance(index,prevBalance){
+    this.entity.stock_products[index].stock_balance = prevBalance
+  }
   onAddExpenses(){
     this.expensesList.push({
       amount:0,
@@ -129,9 +139,8 @@ export class StockFormComponent implements OnInit {
     if(this.entity.record.branch_id !== undefined){
       this.onGetPrevRecord()
     }
-
   }
-  onGetPrevStock(productId:number,entity:RecordForm){
+  onGetPrevStock(productId:string,entity:RecordForm){
     let prev = entity.stock_products.find(prev => {
       if(prev.product_id == productId){
         return true

@@ -10,7 +10,7 @@ export interface Expenses{
 }
 export interface StockProduct{
   stock_id?:number,
-  product_id?:number ,
+  product_id?:string ,
   stock_in?:number,
   stock_balance?:number
 }
