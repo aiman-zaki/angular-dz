@@ -9,6 +9,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import Swal from 'sweetalert2'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shift-works',
@@ -34,7 +35,7 @@ export class ShiftWorksComponent implements OnInit {
   form:FormGroup
   buttonIndex = 0
 
-  url: string = '/api/master-data/shift-works/dtlist/4';
+  url: string = `${environment.serverUrl}/master-data/shift-works/dtlist/4`;
   faPlusCircle = faPlusCircle
   constructor(
     private service:ShiftWorksService,

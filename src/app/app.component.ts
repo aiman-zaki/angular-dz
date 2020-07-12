@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { Router,ActivatedRoute,NavigationStart } from '@angular/router'
 import {BehaviorSubject} from 'rxjs'
@@ -9,7 +10,6 @@ import { throws } from 'assert';
 })
 export class AppComponent {
   showHeader$:BehaviorSubject<boolean> = new BehaviorSubject(true)
-
   showHeader(){
     this.router.events.subscribe( event => {
       if(event instanceof NavigationStart){
@@ -26,6 +26,9 @@ export class AppComponent {
 
   }
   ngOnInit(): void {
+    console.log(`Produdction ? ${environment.production}`)
+    console.log(`Produdction ? ${environment.serverUrl}`)
+
     this.showHeader()
     this.showHeader$.subscribe(res => console.log(res))
   }

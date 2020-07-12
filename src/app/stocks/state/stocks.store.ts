@@ -6,7 +6,6 @@ export interface StocksState extends EntityState<Record> {}
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'stocks' })
 export class StocksStore extends EntityStore<StocksState> {
-
   constructor() {
     super();
   }

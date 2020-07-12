@@ -4,9 +4,10 @@ import { ShiftWork } from './shift-work.model';
 import { Injectable } from '@angular/core';
 import { ShiftWorksStore, ShiftWorksState } from './shift-works.store';
 import { NgEntityService,NgEntityServiceConfig } from '@datorama/akita-ng-entity-service';
+import { environment } from 'src/environments/environment';
 @NgEntityServiceConfig({
   resourceName: 'shift-works',
-  baseUrl: '/api/master-data'
+  baseUrl: `${environment.serverUrl}/master-data`
 })
 @Injectable({ providedIn: 'root' })
 export class ShiftWorksService   extends NgEntityService<ShiftWorksState> {

@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -31,7 +32,7 @@ export class BranchesComponent implements OnInit {
   lengthSubject$: BehaviorSubject<number> = new BehaviorSubject(5)
   page: number = 5
 
-  url: string = '/api/branches/dtlist/5';
+  url: string = `${environment.serverUrl}/branches/dtlist/5`;
 
   branchForm: FormGroup
 

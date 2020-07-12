@@ -5,6 +5,7 @@ import { ProductsStore, ProductsState } from './products.store';
 import { Product } from './product.model';
 import { ID } from '@datorama/akita';
 import { NgEntityService,NgEntityServiceConfig } from '@datorama/akita-ng-entity-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService extends NgEntityService<ProductsState>  {
@@ -14,7 +15,7 @@ export class ProductsService extends NgEntityService<ProductsState>  {
   }
 
   getById(id) {
-    return this.httpClient.get<Product>(`api/products/${id}`)
+    return this.httpClient.get<Product>(`${environment.serverUrl}/products/${id}`)
   }
 
 }

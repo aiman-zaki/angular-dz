@@ -7,6 +7,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye,faTrash,faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-suppliers',
@@ -27,7 +28,7 @@ export class SuppliersComponent implements OnInit {
   page:number = 5
   id:string
 
-  url: string = '/api/suppliers/dtlist/5';
+  url: string = `${environment.serverUrl}/suppliers/dtlist/5`;
   constructor(private service:SuppliersService,private formBuilder:FormBuilder,private modalService:NgbModal,private toastService:ToastService) {
     this.form = this.formBuilder.group({
       company:"",

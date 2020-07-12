@@ -69,7 +69,7 @@ import {
     {
       provide: NG_ENTITY_SERVICE_CONFIG,
       useValue: {
-        baseUrl: '/api'
+        baseUrl: `${environment.serverUrl}`
       }
     },
     {

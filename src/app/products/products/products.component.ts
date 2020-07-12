@@ -9,6 +9,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye, faTrash, faEdit, faSearch,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-products',
@@ -41,7 +42,7 @@ export class ProductsComponent implements OnInit {
   buttonIndex = 0
   id:string = ""
 
-  url: string = 'api/products/dtlist/6';
+  url: string = `${environment.serverUrl}/products/dtlist/6`;
   constructor(
     private service:ProductsService,
     private query:ProductsQuery,

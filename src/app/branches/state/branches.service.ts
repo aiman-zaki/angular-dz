@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BranchesStore, BranchesState } from './branches.store';
 import { Branch } from './branch.model';
 import { NgEntityService,NgEntityServiceConfig } from '@datorama/akita-ng-entity-service';
-
+import { environment } from '../../../environments/environment'
 @Injectable({ providedIn: 'root' })
 export class BranchesService extends NgEntityService {
 
@@ -13,7 +13,8 @@ export class BranchesService extends NgEntityService {
   }
 
   getById(id:string){
-    return this.httpClient.get<Branch>(`/api/branches/${id}`)
+    console.log(environment.serverUrl)
+    return this.httpClient.get<Branch>(`${environment.serverUrl}/branches/${id}`)
   }
 
 

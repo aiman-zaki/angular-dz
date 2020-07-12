@@ -9,6 +9,7 @@ import { User } from './state/user.model';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye, faTrash, faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-users',
@@ -30,7 +31,7 @@ export class UsersComponent implements OnInit {
   lengthSubject$:BehaviorSubject<number> = new BehaviorSubject(5)
   buttonIndex:number = 0
   page:number = 5
-  url: string = 'api/users/dtlist/6';
+  url: string = `${environment.serverUrl}/users/dtlist/6`;
   form:FormGroup
   constructor(private service:UsersService,private query:UsersQuery,private formBuilder:FormBuilder,private modalService:NgbModal,private toastService:ToastService) { }
 

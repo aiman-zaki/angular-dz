@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
@@ -11,7 +12,7 @@ export class AuthService {
   }
 
   login(creds:AuthModel) {
-    return this.http.post<AuthModel>("/api/auth/login",creds).pipe(
+    return this.http.post<AuthModel>(`${environment.serverUrl}/auth/login`,creds).pipe(
       tap(auth => this.authStore.update(auth))
     )
   }

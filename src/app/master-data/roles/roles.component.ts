@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye,faTrash,faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-roles',
@@ -27,7 +28,7 @@ export class RolesComponent implements OnInit {
   lengthSubject$:BehaviorSubject<number> = new BehaviorSubject(5)
   page:number = 5
 
-  url: string = '/api/roles/dtlist/3';
+  url: string = `${environment.serverUrl}/roles/dtlist/3`;
   constructor(private modalService:NgbModal,private service:RolesService,private formBuilder:FormBuilder) { }
 
   onSubmit(formValue){
