@@ -1,7 +1,6 @@
-import { Record } from './../../../../../../../Projects/angular-dz/src/app/stocks/stock-form/stock-form.model';
+import { Record } from '../stock-form/stock-form.model';
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-
 export interface StocksState extends EntityState<Record> {}
 
 @Injectable({ providedIn: 'root' })
