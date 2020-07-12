@@ -2,7 +2,7 @@ import { Record } from './../stock-form/stock-form.model';
 import { BranchesQuery } from 'src/app/branches/state/branches.query';
 import { BranchesService } from 'src/app/branches/state/branches.service';
 import { cloneDeep } from 'lodash';
-import { faCalendar, faThumbtack, faUser, faClock, faEye, faPlusCircle,faCheck,faTimes,faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faThumbtack, faUser, faClock, faEye, faPlusCircle,faCheck,faTimes,faInfoCircle,faUndo } from '@fortawesome/free-solid-svg-icons';
 import { StocksService } from './../state/stocks.service';
 import { StocksQuery } from './../state/stocks.query';
 import { StocksStore } from './../state/stocks.store';
@@ -22,6 +22,7 @@ export class StocksComponent implements OnInit {
   faClock = faClock
   faEye = faEye
   faPlusCircle = faPlusCircle
+  faUndo = faUndo
   stocks$: Observable<Record[]>
   todayStocks$: BehaviorSubject<Record[]> = new BehaviorSubject([])
   todayStocksForm$:  BehaviorSubject<Record[]> = new BehaviorSubject([])
@@ -34,9 +35,27 @@ export class StocksComponent implements OnInit {
   page:number=1
   pageLimit:number=5
   total:number = 0
+  filter = {
+    date:null
+  }
   constructor(private router: Router, private query: StocksQuery, private service: StocksService,private branchService:BranchesService,private branchQuery:BranchesQuery) { }
 
+  onResetFilters(){
+    this.filter = {
+      date:null
+    }
+    this.service.get(this.page,this.pageLimit).subscribe(res => {
+      this.total = res['total']
+    })
+  }
 
+  onDateChange(event){
+    if(this.filter.date != null){
+      this.service.getWithFilters(this.page,this.pageLimit,this.filter).subscribe(res => {
+        this.total = res['total']
+      })
+    }
+  }
   onPageChange(event){
     this.service.get(event,this.pageLimit).subscribe(res => {
       this.total = res['total']

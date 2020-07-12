@@ -11,36 +11,58 @@
   </div>
 </div>
 
-<div class="col-3">
-  <div class="card">
-    <div class="card-header bg-success" style="color: whitesmoke;">
-      <h4>Today Stocks</h4>
-    </div>
-    <div class="card-body">
-      <ng-container *ngIf="branch$ | async; else noToday">
-        <div class="row p-3">
-          <div class="col" *ngFor="let branch of branch$ | async">
-            <span *ngIf="onCheckTodayStockAndBranch(branch.id); else notCheck">
-              <fa-icon [icon]="faCheck"></fa-icon>
-            </span>
-            <ng-template #notCheck>
-              <span>
-                <fa-icon [icon]="faCross"></fa-icon>
+<div class = "row p-3">
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header bg-success" style="color: whitesmoke;">
+        <h4>Today Stocks</h4>
+      </div>
+      <div class="card-body">
+        <ng-container *ngIf="branch$ | async; else noToday">
+          <div class="row p-3">
+            <div class="col" *ngFor="let branch of branch$ | async">
+              <span *ngIf="onCheckTodayStockAndBranch(branch.id); else notCheck">
+                <fa-icon [icon]="faCheck"></fa-icon>
               </span>
-            </ng-template>
-            <span> {{ branch.branch }} </span>
+              <ng-template #notCheck>
+                <span>
+                  <fa-icon [icon]="faCross"></fa-icon>
+                </span>
+              </ng-template>
+              <span> {{ branch.branch }} </span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noToday>
+          <h4>Data</h4>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+<div class = "container-fluid">
+  <div class = "card">
+    <div class = "card-body">
+      <div class = "row">
+        <div class="input-group col-3">
+          <input class="form-control"  ngbDatepicker name="stock_date"
+            #d="ngbDatepicker" [(ngModel)]="filter.date" placeholder="Stock Date" (dateSelect)="onDateChange($event)" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+              <fa-icon [icon]="faCalendar"></fa-icon>
+            </button>
           </div>
         </div>
-      </ng-container>
-      <ng-template #noToday>
-        <h4>Data</h4>
-      </ng-template>
+        <div class = "col-3">
+          <button (click)="onResetFilters()" class="btn btn-warning"><fa-icon [icon]="faUndo"></fa-icon> Reset</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 <div class="p-3">
   <div class="row" *ngIf="stocks$ | async as stocks">
-    <ng-container *ngIf="stocks.length > 0; else noData">
+    <ng-container *ngIf="stocks.length > 0 || total > 0; else noData">
       <div class="col-12">
         <ng-container *ngFor="let stock of stocks">
           <ng-container>
