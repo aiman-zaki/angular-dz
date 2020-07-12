@@ -52,7 +52,7 @@ export class ShiftWorksComponent implements OnInit {
 
   onSubmit(formValue){
     if(this.buttonIndex == 4){
-      this.service.add(formValue,{url:"/api/master-data/shift-works"}).subscribe(res => {
+      this.service.add(formValue).subscribe(res => {
         this.modalService.dismissAll()
         this.searchSubject$.next(this.search)
         this.toastService.showSuccessMessage(`Shift ${formValue.branch} Created`)

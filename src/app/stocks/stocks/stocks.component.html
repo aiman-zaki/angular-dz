@@ -15,7 +15,13 @@
   <div class="col-3">
     <div class="card">
       <div class="card-header bg-success" style="color: whitesmoke;">
-        <h4>Today Stocks</h4>
+          <ng-container *ngIf="filter.date else today" >
+            <h4> Stocks : {{filter.date | date:'dd/mm/yyyy '}} </h4>
+          </ng-container>
+          <ng-template #today>
+              <h4>Stocks : Today </h4>
+
+          </ng-template>
       </div>
       <div class="card-body">
         <ng-container *ngIf="branch$ | async; else noToday">

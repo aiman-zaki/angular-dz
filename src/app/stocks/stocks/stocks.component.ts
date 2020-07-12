@@ -46,20 +46,19 @@ export class StocksComponent implements OnInit {
     }
     this.service.get(this.page,this.pageLimit).subscribe(res => {
       this.total = res['total']
+
     })
   }
 
   onDateChange(event){
     if(this.filter.date != null){
       this.service.getWithFilters(this.page,this.pageLimit,this.filter).subscribe(res => {
-        this.total = res['total']
+      this.total = res['total']
       })
     }
   }
   onPageChange(event){
-    this.service.get(event,this.pageLimit).subscribe(res => {
-      this.total = res['total']
-    })
+    this.service.get(event,this.pageLimit).subscribe()
   }
   onGetTodayStockDetail(){
     this.todayStocks$.subscribe((stocks) => {
@@ -95,19 +94,25 @@ export class StocksComponent implements OnInit {
   ngOnInit(): void {
     this.service.get(this.page,this.pageLimit).subscribe(res => {
       this.total = res['total']
+
     })
     this.branchService.get().subscribe()
     this.stocks$ = this.query.selectAll()
     this.branch$ = this.branchQuery.selectAll()
     this.stocks$.subscribe(res => {
       let todayStocks = []
-      res.forEach((stock) => {
-        let stockDate = new Date(stock.date)
-        if(stockDate.getDate() == new Date().getDate()){
-          todayStocks.push(stock)
-        }
+      if (res.length > 0) {
+        res.forEach((stock) => {
+          let stockDate =  new Date(stock.date)
+          let date = this.filter.date ? this.filter.date : new Date()
+          if(stockDate.getDate() ==  date.getDate() ){
+            todayStocks.push(stock)
+          }
+          this.todayStock = todayStocks
+        })
+      } else {
         this.todayStock = todayStocks
-      })
+      }
     })
 
   }
