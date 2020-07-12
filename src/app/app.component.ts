@@ -15,6 +15,8 @@ export class AppComponent {
       if(event instanceof NavigationStart){
         if(event.url.search(/(login|register)/g) > 0  ){
           this.showHeader$.next(false)
+        } else {
+          this.showHeader$.next(true)
         }
       }
     })

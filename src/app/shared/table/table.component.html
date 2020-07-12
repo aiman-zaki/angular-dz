@@ -6,7 +6,7 @@
           [style]="column.customStyle"
           sortable
           *ngIf="column.orderable else notOrderable"
-          [sortable]="i" [index]="i"  (click)="i"  (sort)="onSorting($event)">{{ column.data[0].toUpperCase()+column.data.slice(1) }}
+          [sortable]="i" [index]="i"  (click)="i"  (sort)="onSorting($event)">{{ column.name[0].toUpperCase()+column.name.slice(1) }}
         </th>
         <ng-template #notOrderable>
           <th

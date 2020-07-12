@@ -23,6 +23,7 @@ import { User } from 'src/app/master-data/users/state/user.model';
 import { ShiftWork } from 'src/app/master-data/shift-works/state/shift-work.model';
 import { take } from 'rxjs/operators'
 import { DecimalPipe, DatePipe } from '@angular/common';
+import Swal from 'sweetalert2'
 
 import { cloneDeep } from 'lodash'
 @Component({
@@ -82,36 +83,54 @@ export class StockFormComponent implements OnInit {
 
   ) {
     this.showProducts = false
+    this.entity.financial = {
 
+    }
   }
-
   onAddExpenses(){
     this.expensesList.push({
-      expenses:0,
+      amount:0,
       reason:"",
     })
   }
-
   onTotalNetProfit(profit:number){
     this.totalProfit += profit
-    return profit
+    return this.totalProfit
   }
-
   onDelete(){
-    this.service.remove(this.id).subscribe(res => {
-      this.router.navigateByUrl("/stocks")
-    })
-  }
+    Swal.fire({
+      title: `Are you sure want to Delete`,
+      icon: 'info',
+      text:`Branch ID : ${this.id}`,
+      showCancelButton: true,
+      cancelButtonText: `Back to listing`,
+      confirmButtonText: 'Delete',
+    }).then((result) => {
+      if (result.value) {
+        this.service.remove(this.id).subscribe(res => {
+          this.router.navigateByUrl("/stocks")
+        })
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
 
+      }
+    })
+
+  }
   onDateChange($event){
-    console.log($event)
+    this.isPrevRecordExistSubject$.next(false)
+    this.entity.record.shift_work_id = null
   }
 
   onBranchChange($event){
-    console.log($event)
+    this.isPrevRecordExistSubject$.next(false)
+    this.entity.record.shift_work_id = null
+  }
+  onShiftWorkChange($event){
+    if(this.entity.record.branch_id !== undefined){
+      this.onGetPrevRecord()
+    }
 
   }
-
   onGetPrevStock(productId:number,entity:RecordForm){
     let prev = entity.stock_products.find(prev => {
       if(prev.product_id == productId){
@@ -121,24 +140,25 @@ export class StockFormComponent implements OnInit {
     })
 
   }
-
   onReturnProduct(productId){
     return this.productsQuery.selectEntity(productId)
   }
-
-
-  onSave(entity){
+  onSave(entity:RecordForm){
+    entity.expenses = this.expensesList
+    if(!this.id){
       this.service.add(entity).subscribe(res => {
         this.toastService.showSuccessMessage("Stock Inserted")
-        //this.router.navigateByUrl("/stocks")
+        this.router.navigateByUrl("/stocks")
       })
+    } else {
+      this.service.update(entity).subscribe(res => {
 
+      })
+    }
   }
-
   onGetPrevRecord(){
     let prevDate = cloneDeep(this.entity.record.date)
     prevDate.setDate(prevDate.getDate()-1)
-    //Need to fix backend wih error
     this.service.getStockProducstFilter(prevDate.toISOString(),this.entity.record.branch_id,this.entity.record.shift_work_id).
       subscribe(res => {
         if (res.stock_products == null ){
@@ -160,13 +180,12 @@ export class StockFormComponent implements OnInit {
     this.shift$ = this.shiftWorksQuery.selectAll()
 
     forkJoin([
-      this.productService.get(),
+      this.productService.get<Product[]>(),
       this.usersService.get(),
       this.shiftWorksService.get(),
       this.branchService.get(),
     ]).subscribe(([products,stock]) => {
       let stockProducts:StockProduct[] = []
-
       this.entity.stock_products = stockProducts
       this.showProducts = true
       this.entity.record.date = new Date()
@@ -176,14 +195,13 @@ export class StockFormComponent implements OnInit {
           product_id:products[i].id,
           stock_balance:0,
           stock_in:0,
-
         })
       }
-
       this.id = this.route.snapshot.params["id"]
       if (this.id !== undefined){
         this.service.getStockProducts(this.id).subscribe(entity => {
           this.entity = entity
+          this.expensesList = this.entity.expenses
           this.entity.record.date = new Date(entity.record.date)
           this.isUpdate = true
           this.onReturnProduct(this.entity.stock_products[0].product_id)

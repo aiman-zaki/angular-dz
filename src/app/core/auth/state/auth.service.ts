@@ -11,9 +11,13 @@ export class AuthService {
   }
 
   login(creds:AuthModel) {
-    return this.http.post("/api/auth/login",creds).pipe(
+    return this.http.post<AuthModel>("/api/auth/login",creds).pipe(
       tap(auth => this.authStore.update(auth))
     )
+  }
+
+  logout(){
+    localStorage.removeItem('access_token')
   }
 
   regster(creds:AuthModel){

@@ -64,7 +64,7 @@
               <label name="shift_id" class="col-sm-3 col-form-label">Shift
               </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" [(ngModel)]="this.entity.record.shift_work_id" name="shift_id"
+                <select [disabled]="isUpdate" (change)="onShiftWorkChange($event)" [(ngModel)]="this.entity.record.shift_work_id" name="shift_id"
                   class="custom-select" required>
                   <ng-container *ngFor="let shift of shift$ | async">
                     <option value="{{ shift.id }}">{{ shift.shift }}</option>
@@ -83,18 +83,18 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Collection </label>
                   <div class="input-group col">
-                    <input required name="collection" type="text" placeholder="RM : 00000" />
+                    <input [(ngModel)]="entity.financial.collection" required name="collection" type="number" placeholder="RM : 00000" />
                   </div>
                 </div>
                 <div *ngFor="let expenses of expensesList;let i = index" class="form-group row">
                   <ng-container >
                     <label class="col-sm-3 col-form-label">Expenses </label>
                     <div class="input-group col">
-                      <input name="expenses" [(ngModel)]="expensesList[i].expenses" type="text" placeholder="RM : 00000"
+                      <input name="expenses" [(ngModel)]="expensesList[i].amount" type="number" [ngModelOptions]="{standalone: true}"  placeholder="RM : 00000"
                         required />
                     </div>
                     <div class = "input-group col">
-                      <input type="text" [(ngModel)]="expensesList[i].reason"  placeholder="Reasons"/>
+                      <input type="text" [(ngModel)]="expensesList[i].reason"  [ngModelOptions]="{standalone: true}"  placeholder="Reasons"/>
                     </div>
                   </ng-container>
                 </div>
@@ -130,12 +130,12 @@
                     TOTAL
                   </th>
                   <th class="bg-danger" style="color: whitesmoke;">BALANCE</th>
-                  <th *ngIf="isUpdate">TOTAL SALE</th>
-                  <th *ngIf="isUpdate">NET PROFIT</th>
+                  <!--<th *ngIf="isUpdate">TOTAL SALE</th>
+                  <th *ngIf="isUpdate">NET PROFIT</th>-->
                 </thead>
                 <tbody *ngIf="!isUpdate && products$ | async as products">
                   <tr *ngFor="let product of products; let i = index">
-                    <td>{{ product.id }}</td>
+                    <td>{{ i+1 }}</td>
                     <td>{{ product.product }}</td>
                     <td>
                       <div class="input-group">
@@ -166,7 +166,7 @@
                 <tbody *ngIf="isUpdate">
                   <tr *ngFor="let sp of entity.stock_products; let i = index">
                     <ng-container *ngIf="onReturnProduct(sp.product_id) | async as product">
-                      <td>{{ product.id }}</td>
+                      <td>{{ i+1 }}</td>
                       <td>{{ product.product }}</td>
                       <td>
                         <div class="input-group">
@@ -192,7 +192,8 @@
                             [name]="entity.stock_products[i].stock_balance" required type="number" />
                         </div>
                       </td>
-                      <td>
+                    <!--<td>
+
                         {{
                           (this.entity.stock_products[i].stock_balance +
                             this.entity.stock_products[i].stock_in) *
@@ -207,12 +208,12 @@
                               (product.sale_price - product.cost_price)
                           )
                         }}
-                      </td>
+                      </td>-->
                     </ng-container>
                   </tr>
                   <tr>
-                    <td colspan="5" class="text-center">Total Net Profit</td>
-                    <td class="text-right">{{ totalProfit }}</td>
+                    <!--<<td colspan="5" class="text-center">Total Net Profit</td>
+                    td class="text-right">{{ totalProfit }}</td>-->
                   </tr>
                 </tbody>
               </table>

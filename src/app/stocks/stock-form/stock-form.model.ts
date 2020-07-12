@@ -2,14 +2,25 @@ import { User } from 'src/app/master-data/users/state/user.model';
 import { ShiftWork } from './../../master-data/shift-works/state/shift-work.model';
 import { Branch } from 'src/app/branches/state/branch.model';
 export interface Expenses{
-  expenses?:number,
+  financial_id?:string,
+  amount?:number,
   reason?:string,
+  date_created?:Date,
+  date_updated?:Date,
 }
 export interface StockProduct{
   stock_id?:number,
   product_id?:number ,
   stock_in?:number,
   stock_balance?:number
+}
+
+export interface Financial{
+  id?:string
+  record_id?:string,
+  collection?:number,
+  date_created?:Date,
+  date_updated?:Date
 }
 
 export interface Record {
@@ -26,4 +37,6 @@ export interface Record {
 export interface RecordForm {
   record?:Record
   stock_products?:StockProduct[]
+  financial?:Financial
+  expenses?:Expenses[]
 }

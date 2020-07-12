@@ -10,12 +10,8 @@ export class AuthQuery extends Query<AuthState> {
     super(store);
   }
 
-  getAccesToken(){
-    return this.getValue().refresh_token
-  }
-
   isLoggedIn(){
-    return this.getValue().refresh_token ? true : false
+    return localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null
   }
 
 }

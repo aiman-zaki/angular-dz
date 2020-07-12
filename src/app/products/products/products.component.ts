@@ -1,3 +1,4 @@
+import { ToastService } from 'src/app/shared/toast/toast.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ProductsQuery } from './../state/products.query';
 import { ProductsService } from './../state/products.service';
@@ -7,6 +8,7 @@ import {Observable,BehaviorSubject} from 'rxjs'
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye, faTrash, faEdit, faSearch,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-products',
@@ -37,13 +39,15 @@ export class ProductsComponent implements OnInit {
   entity:Product
 
   buttonIndex = 0
+  id:string = ""
 
   url: string = 'api/products/dtlist/6';
   constructor(
     private service:ProductsService,
     private query:ProductsQuery,
     private modalService: NgbModal,
-    private formBuilder:FormBuilder) {
+    private formBuilder:FormBuilder,
+    private toastService:ToastService) {
   }
 
   onSearch() {
@@ -54,6 +58,7 @@ export class ProductsComponent implements OnInit {
     this.lengthSubject$.next(this.page)
   }
   onButtonHandler(event:any){
+    this.id = event.id
     this.buttonIndex = event.index
     if(event.index == 4){
       this.entity = {}
@@ -74,25 +79,47 @@ export class ProductsComponent implements OnInit {
       this.modalService.open(this.modal)
 
     }
+    if (event.index == 1) {
+      Swal.fire({
+        title: `Are you sure want to Delete`,
+        icon: 'info',
+        text:`Branch ID : ${event.id}`,
+        showCancelButton: true,
+        cancelButtonText: `Back to listing`,
+        confirmButtonText: 'Delete',
+      }).then((result) => {
+        if (result.value) {
+          this.service.delete(event.id).subscribe(res => {
+            this.searchSubject$.next(this.search)
+          })
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+        }
+      })
+    }
+
   }
   onSubmit(formValue){
-    if(this.buttonIndex == 0){
+    if(this.buttonIndex == 4){
       this.service.add({
         product:formValue.product,
         cost_price:formValue.cost_price,
         sale_price:formValue.sale_price,
       }).subscribe(res => {
-        this.onDataTableInit()
+        this.searchSubject$.next(this.search)
         this.modalService.dismissAll()
+        this.toastService.showSuccessMessage(`Products ${formValue.branch} Created`)
+
       })
     }
     if(this.buttonIndex == 2){
-      this.service.update(formValue).subscribe(res => {
-        this.onDataTableInit()
+      this.service.update(this.id,formValue).subscribe(res => {
+        this.searchSubject$.next(this.search)
         this.modalService.dismissAll()
+        this.toastService.showSuccessMessage(`Products ${formValue.branch} Updated`)
+
       })
     }
-
   }
 
 
@@ -154,7 +181,7 @@ export class ProductsComponent implements OnInit {
       },
       {
         data: 'product',
-        name: '',
+        name: 'Product',
         searchable: true,
         orderable: true,
         search: {
@@ -166,7 +193,7 @@ export class ProductsComponent implements OnInit {
       },
       {
         data: 'cost_price',
-        name: '',
+        name: 'Cost Price',
         searchable: true,
         orderable: true,
         search: {
@@ -178,7 +205,7 @@ export class ProductsComponent implements OnInit {
       },
       {
         data: 'sale_price',
-        name: '',
+        name: 'Sale Price',
         searchable: true,
         orderable: true,
         search: {
@@ -190,7 +217,7 @@ export class ProductsComponent implements OnInit {
       },
       {
         data: 'date_created',
-        name: '',
+        name: 'Date Created',
         searchable: true,
         orderable: true,
         search: {
@@ -202,7 +229,7 @@ export class ProductsComponent implements OnInit {
       },
       {
         data: 'date_updated',
-        name: '',
+        name: 'Date Updated',
         searchable: true,
         orderable: true,
         search: {

@@ -1,3 +1,4 @@
+import { AuthGuardService } from './utils/auth-guard.service';
 import { ShiftWorksService } from './master-data/shift-works/state/shift-works.service';
 import { RolesService } from './master-data/roles/state/roles.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
@@ -6,8 +7,8 @@ import { StockTypesService } from './master-data/stock-types/state/stock-types.s
 import { ConfigurationsModule } from './master-data/master-data.module';
 import { ProductsService } from './products/state/products.service';
 import { StocksService } from './stocks/state/stocks.service';
-import { HttpErrorInterceptor } from './interceptor/http-error.interceptor';
-import { HttpTokenInterceptor } from './interceptor/http-token.interceptor';
+import { HttpErrorInterceptor } from './utils/http-error.interceptor';
+import { HttpTokenInterceptor } from './utils/http-token.interceptor';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -64,6 +65,7 @@ import {
     ToastService,
     RolesService,
     ShiftWorksService,
+    AuthGuardService,
     {
       provide: NG_ENTITY_SERVICE_CONFIG,
       useValue: {

@@ -1,3 +1,4 @@
+import { ToastService } from 'src/app/shared/toast/toast.service';
 import { faEye,faTrash,faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -7,6 +8,8 @@ import { ShiftWork } from './state/shift-work.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
+import Swal from 'sweetalert2'
+
 @Component({
   selector: 'app-shift-works',
   templateUrl: './shift-works.component.html',
@@ -38,6 +41,7 @@ export class ShiftWorksComponent implements OnInit {
     private query:ShiftWorksQuery,
     private formBuilder:FormBuilder,
     private modalService: NgbModal,
+    private toastService:ToastService
   ) {
     this.form = this.formBuilder.group({
       shift:"",
@@ -49,13 +53,16 @@ export class ShiftWorksComponent implements OnInit {
     if(this.buttonIndex == 4){
       this.service.add(formValue,{url:"/api/master-data/shift-works"}).subscribe(res => {
         this.modalService.dismissAll()
-        this.onDataTableInit()
+        this.searchSubject$.next(this.search)
+        this.toastService.showSuccessMessage(`Shift ${formValue.branch} Created`)
+
       })
     }
     if(this.buttonIndex == 2){
       this.service.update(formValue.id,formValue).subscribe(res => {
         this.modalService.dismissAll()
-        this.onDataTableInit()
+        this.searchSubject$.next(this.search)
+        this.toastService.showSuccessMessage(`Shift ${formValue.branch} Updated`)
       })
     }
   }
@@ -88,8 +95,25 @@ export class ShiftWorksComponent implements OnInit {
       this.modalService.open(this.modal)
 
     }
-  }
+    if (event.index == 1) {
+      Swal.fire({
+        title: `Are you sure want to Delete`,
+        icon: 'info',
+        text:`Branch ID : ${event.id}`,
+        showCancelButton: true,
+        cancelButtonText: `Back to listing`,
+        confirmButtonText: 'Delete',
+      }).then((result) => {
+        if (result.value) {
+          this.service.delete(event.id).subscribe(res => {
+            this.searchSubject$.next(this.search)
+          })
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
 
+        }
+      })
+    }
+  }
 
   open(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title',size:'lg'}).result.then((result) => {
@@ -145,7 +169,7 @@ export class ShiftWorksComponent implements OnInit {
       },
       {
         data: 'shift',
-        name: '',
+        name: 'Shift',
         searchable: true,
         orderable: true,
         search: {
@@ -157,7 +181,7 @@ export class ShiftWorksComponent implements OnInit {
       },
       {
         data: 'date_created',
-        name: '',
+        name: 'Date Created',
         searchable: true,
         orderable: true,
         search: {
@@ -169,7 +193,7 @@ export class ShiftWorksComponent implements OnInit {
       },
       {
         data: 'date_updated',
-        name: '',
+        name: 'Date Updated',
         searchable: true,
         orderable: true,
         search: {

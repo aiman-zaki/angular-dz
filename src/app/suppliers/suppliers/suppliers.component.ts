@@ -1,7 +1,12 @@
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SuppliersService } from './../state/suppliers.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
-import { faEye,faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEye,faTrash,faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-suppliers',
@@ -9,6 +14,8 @@ import { faEye,faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./suppliers.component.scss']
 })
 export class SuppliersComponent implements OnInit {
+  @ViewChild('modal') modal : any;
+  faPlusCircle = faPlusCircle
   columns: TableColumn[] = [];
   buttons: TableButton[] = []
   formats: TableColumnDateFormat[] = []
@@ -18,12 +25,60 @@ export class SuppliersComponent implements OnInit {
   searchSubject$:BehaviorSubject<TableColumnSearch[]> = new BehaviorSubject([])
   lengthSubject$:BehaviorSubject<number> = new BehaviorSubject(5)
   page:number = 5
+  id:string
 
   url: string = '/api/suppliers/dtlist/5';
-  constructor() { }
+  constructor(private service:SuppliersService,private formBuilder:FormBuilder,private modalService:NgbModal,private toastService:ToastService) {
+    this.form = this.formBuilder.group({
+      company:"",
+      person_in_charge:"",
+      email:"",
+      address:"",
+      phone_no:"",
+    })
 
-  onButtonHandler(event){
+  }
+  buttonIndex:number = 0
+  form:FormGroup
+  onButtonHandler(event:any){
+    this.id = event.id
+    this.buttonIndex = event.index
+    if(event.index == 4){
+      this.modalService.open(this.modal)
+    }
+    if(event.index == 0){
+      this.service.get(event.id).subscribe(res => {
+        this.form = this.formBuilder.group(res)
+      })
+      this.modalService.open(this.modal)
 
+    }
+    if (event.index == 1) {
+      Swal.fire({
+        title: `Are you sure want to Delete`,
+        icon: 'info',
+        text:`Branch ID : ${event.id}`,
+        showCancelButton: true,
+        cancelButtonText: `Back to listing`,
+        confirmButtonText: 'Delete',
+      }).then((result) => {
+        if (result.value) {
+          this.service.delete(event.id).subscribe(res => {
+            this.searchSubject$.next(this.search)
+          })
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+        }
+      })
+    }
+    if(event.index == 2){
+      this.service.get(event.id).subscribe(res => {
+        this.form = this.formBuilder.group(res)
+
+      })
+      this.modalService.open(this.modal)
+
+    }
   }
 
 
@@ -31,6 +86,27 @@ export class SuppliersComponent implements OnInit {
     this.lengthSubject$.next(this.page)
 
   }
+
+  onSubmit(formValue){
+    if(this.buttonIndex == 4){
+      this.service.add(formValue).subscribe(res => {
+        this.searchSubject$.next(this.search)
+        this.modalService.dismissAll()
+        this.toastService.showSuccessMessage(`Suppliers ${formValue.branch} Created`)
+
+      })
+    }
+    if(this.buttonIndex == 2){
+      this.service.update(this.id,formValue).subscribe(res => {
+        this.searchSubject$.next(this.search)
+        this.modalService.dismissAll()
+        this.toastService.showSuccessMessage(`Suppliers ${formValue.branch} Updated`)
+
+      })
+    }
+
+  }
+
 
   onDataTableInit(){
     this.search = [
@@ -41,12 +117,6 @@ export class SuppliersComponent implements OnInit {
       {
         colIndex:2,
         searchParam:""
-      }
-    ]
-    this.formats = [
-      {
-        column:4,
-        format:'dd/MM/yyyy'
       }
     ]
 
@@ -80,7 +150,7 @@ export class SuppliersComponent implements OnInit {
       },
       {
         data: 'company',
-        name: '',
+        name: 'Company',
         searchable: true,
         orderable: true,
         search: {
@@ -92,7 +162,7 @@ export class SuppliersComponent implements OnInit {
       },
       {
         data: 'person_in_charge',
-        name: '',
+        name: 'Person In Charge',
         searchable: true,
         orderable: true,
         search: {
@@ -104,7 +174,7 @@ export class SuppliersComponent implements OnInit {
       },
       {
         data: 'email',
-        name: '',
+        name: 'Email',
         searchable: true,
         orderable: true,
         search: {
@@ -116,7 +186,31 @@ export class SuppliersComponent implements OnInit {
       },
       {
         data: 'phone_no',
-        name: '',
+        name: 'Phone No',
+        searchable: true,
+        orderable: true,
+        search: {
+          value: '',
+          regex: true,
+        },
+        index: 'value',
+        customStyle:"font-size:14px"
+      },
+      {
+        data: 'date_created',
+        name: 'Date Created',
+        searchable: true,
+        orderable: true,
+        search: {
+          value: '',
+          regex: true,
+        },
+        index: 'value',
+        customStyle:"font-size:14px"
+      },
+      {
+        data: 'date_updated',
+        name: 'Date Updated',
         searchable: true,
         orderable: true,
         search: {

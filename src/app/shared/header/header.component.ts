@@ -1,3 +1,4 @@
+import { AuthService } from './../../core/auth/state/auth.service';
 import { ActivatedRoute,Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,23 +10,18 @@ import { Component, OnInit } from '@angular/core';
 export class HeaderComponent implements OnInit {
   menuHidden = true;
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private authService:AuthService,private route:Router) { }
 
-  showHeader():boolean{
-   if (this.router.url.search(/(login|register)/g)){
-     return false
-   }
-   return true
-
+  onLogout(){
+    this.authService.logout()
+    this.router.navigateByUrl("/login")
   }
-
 
   toggleMenu() {
     this.menuHidden = !this.menuHidden;
   }
 
   ngOnInit(): void {
-    console.log("header")
   }
 
 }

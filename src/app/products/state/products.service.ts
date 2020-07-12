@@ -4,37 +4,17 @@ import { Injectable } from '@angular/core';
 import { ProductsStore, ProductsState } from './products.store';
 import { Product } from './product.model';
 import { ID } from '@datorama/akita';
+import { NgEntityService,NgEntityServiceConfig } from '@datorama/akita-ng-entity-service';
+
 @Injectable({ providedIn: 'root' })
-export class ProductsService  {
+export class ProductsService extends NgEntityService<ProductsState>  {
 
-  constructor(protected store: ProductsStore,private http:HttpClient) {
-
+  constructor(protected store: ProductsStore,private httpClient:HttpClient) {
+    super(store)
   }
 
   getById(id) {
-    return this.http.get<Product>(`api/products/${id}`)
-  }
-
-  get() {
-    return this.http.get<Product[]>('api/products')
-        .pipe(
-          tap(products => this.store.set(products))
-        );
-  }
-
-
-  add(product:Product) {
-    return this.http.post<Product>('/api/products',product).pipe(
-      tap(product => this.store.add(product))
-    )
-  }
-
-  update(product:Product){
-    return this.http.put<Product>(`/api/products/${product.id}`,product)
-  }
-
-  remove(id:ID){
-    this.store.remove(id)
+    return this.httpClient.get<Product>(`api/products/${id}`)
   }
 
 }

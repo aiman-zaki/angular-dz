@@ -6,7 +6,7 @@ import { ShiftWorksStore, ShiftWorksState } from './shift-works.store';
 import { NgEntityService,NgEntityServiceConfig } from '@datorama/akita-ng-entity-service';
 @NgEntityServiceConfig({
   resourceName: 'shift-works',
-  baseUrl: '/api/master-data/'
+  baseUrl: '/api/master-data'
 })
 @Injectable({ providedIn: 'root' })
 export class ShiftWorksService   extends NgEntityService<ShiftWorksState> {

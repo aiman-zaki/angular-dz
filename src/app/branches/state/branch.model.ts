@@ -1,5 +1,5 @@
 export interface Branch {
-  id: number ;
+  id: string ;
   branch: string,
   address: string,
   date_created:Date,

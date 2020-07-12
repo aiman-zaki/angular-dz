@@ -92,14 +92,6 @@ export class RolesComponent implements OnInit {
         buttonClass:"btn btn-primary btn-sm m-1",
         icon:faEye,
       },
-      {
-        buttonClass:"btn btn-danger btn-sm m-1",
-        icon:faTrash,
-      },
-      {
-        buttonClass:"btn btn-info btn-sm m-1",
-        icon:faEdit,
-      }
     ]
     this.columns = [
       {
@@ -117,7 +109,7 @@ export class RolesComponent implements OnInit {
       },
       {
         data: 'key',
-        name: '',
+        name: 'Key',
         searchable: true,
         orderable: true,
         search: {
@@ -129,7 +121,7 @@ export class RolesComponent implements OnInit {
       },
       {
         data: 'text',
-        name: '',
+        name: 'Text',
         searchable: true,
         orderable: true,
         search: {

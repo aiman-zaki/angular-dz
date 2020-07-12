@@ -1,3 +1,4 @@
+import { ToastService } from 'src/app/shared/toast/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -7,6 +8,7 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { User } from './state/user.model';
 import { TableColumn, TableButton, TableColumnDateFormat, TableColumnSearch } from 'src/app/shared/table/table.model';
 import { faEye, faTrash, faEdit,faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-users',
@@ -30,7 +32,7 @@ export class UsersComponent implements OnInit {
   page:number = 5
   url: string = 'api/users/dtlist/6';
   form:FormGroup
-  constructor(private service:UsersService,private query:UsersQuery,private formBuilder:FormBuilder,private modalService:NgbModal) { }
+  constructor(private service:UsersService,private query:UsersQuery,private formBuilder:FormBuilder,private modalService:NgbModal,private toastService:ToastService) { }
 
   ngOnInit(): void {
     this.service.get().subscribe()
@@ -47,13 +49,17 @@ export class UsersComponent implements OnInit {
     if(this.buttonIndex == 4){
       this.service.add(formValue).subscribe(res => {
         this.modalService.dismissAll()
-        this.onDataTableInit()
+        this.searchSubject$.next(this.search)
+        this.toastService.showSuccessMessage(`Users ${formValue.branch} Created`)
+
       })
     }
     if(this.buttonIndex == 2){
       this.service.update(formValue.id,formValue).subscribe(res => {
         this.modalService.dismissAll()
-        this.onDataTableInit()
+        this.searchSubject$.next(this.search)
+        this.toastService.showSuccessMessage(`Users ${formValue.branch} Updated`)
+
       })
     }
   }
@@ -87,6 +93,24 @@ export class UsersComponent implements OnInit {
       })
       this.modalService.open(this.modal)
 
+    }
+    if (event.index == 1) {
+      Swal.fire({
+        title: `Are you sure want to Delete`,
+        icon: 'info',
+        text:`Branch ID : ${event.id}`,
+        showCancelButton: true,
+        cancelButtonText: `Back to listing`,
+        confirmButtonText: 'Delete',
+      }).then((result) => {
+        if (result.value) {
+          this.service.delete(event.id).subscribe(res => {
+            this.searchSubject$.next(this.search)
+          })
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+        }
+      })
     }
   }
 
@@ -126,7 +150,7 @@ export class UsersComponent implements OnInit {
     this.columns = [
       {
         data: 'id',
-        name: '',
+        name: 'ID',
         searchable: true,
         orderable: false,
         search: {
@@ -139,7 +163,7 @@ export class UsersComponent implements OnInit {
       },
       {
         data: 'first_name',
-        name: '',
+        name: 'First Name',
         searchable: true,
         orderable: true,
         search: {
@@ -151,7 +175,7 @@ export class UsersComponent implements OnInit {
       },
       {
         data: 'last_name',
-        name: '',
+        name: 'Last Name',
         searchable: true,
         orderable: true,
         search: {
@@ -163,7 +187,7 @@ export class UsersComponent implements OnInit {
       },
       {
         data: 'salary',
-        name: '',
+        name: 'Salary',
         searchable: true,
         orderable: true,
         search: {
@@ -175,7 +199,7 @@ export class UsersComponent implements OnInit {
       },
       {
         data: 'date_created',
-        name: '',
+        name: 'Date Created',
         searchable: true,
         orderable: true,
         search: {
@@ -187,7 +211,7 @@ export class UsersComponent implements OnInit {
       },
       {
         data: 'date_updated',
-        name: '',
+        name: 'Date Updated',
         searchable: true,
         orderable: true,
         search: {

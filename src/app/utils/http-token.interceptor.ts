@@ -1,4 +1,4 @@
-import { AuthQuery } from './../core/auth/state/auth.query';
+import { AuthQuery } from '../core/auth/state/auth.query';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -14,7 +14,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     request = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.authQuery.getAccesToken()}`
+        Authorization: `Bearer ${this.authQuery.isLoggedIn()}`
       }
     });    return next.handle(request);
   }

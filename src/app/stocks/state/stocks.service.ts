@@ -15,7 +15,7 @@ export class StocksService{
 
 
   remove(id:string){
-    return this.httpClient.delete(`/api/stocks/${id}`).pipe(
+    return this.httpClient.delete(`/api/records/${id}`).pipe(
     tap(  this.store.remove(id))
     )
   }
@@ -23,6 +23,10 @@ export class StocksService{
 
   add(stockForm:RecordForm){
     return this.httpClient.post("/api/records",stockForm)
+  }
+
+  update(stockForm:RecordForm){
+    return this.httpClient.put("/api/records",stockForm)
   }
 
 
