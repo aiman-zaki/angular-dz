@@ -17,7 +17,6 @@ export class ToastComponent implements OnInit {
   }
 
   onRemove(toast:Toast){
-    console.log("remove")
     this.service.remove(toast)
   }
 

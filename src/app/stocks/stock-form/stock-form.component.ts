@@ -161,7 +161,10 @@ export class StockFormComponent implements OnInit {
       })
     } else {
       this.service.update(entity).subscribe(res => {
-
+        this.toastService.showSuccessMessage("Stock Updated")
+        this.entity = entity
+        this.expensesList = this.entity.expenses
+        this.entity.record.date = new Date(entity.record.date)
       })
     }
   }

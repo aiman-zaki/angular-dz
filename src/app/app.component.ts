@@ -26,11 +26,8 @@ export class AppComponent {
 
   }
   ngOnInit(): void {
-    console.log(`Produdction ? ${environment.production}`)
-    console.log(`Produdction ? ${environment.serverUrl}`)
-
     this.showHeader()
-    this.showHeader$.subscribe(res => console.log(res))
+    this.showHeader$.subscribe()
   }
 
   title = 'angular-deZ';

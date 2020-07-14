@@ -10,7 +10,7 @@
       </button>
       &nbsp;
       <button [disabled]="!stockForm.valid" (click)="onSave(entity)" class="btn btn-primary">
-        <fa-icon [icon]="faSave"></fa-icon> Save
+        <fa-icon [icon]="faSave"></fa-icon> {{isUpdate ? "Update" : "Save"}}
       </button>
       &nbsp;
       <button *ngIf="isUpdate" (click)="onDelete()" class="btn btn-danger">
@@ -41,7 +41,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">Branch </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" name="branch_id" [(ngModel)]="this.entity.record.branch_id" class="custom-select"
+                <select name="branch_id" [(ngModel)]="this.entity.record.branch_id" class="custom-select"
                   (change)="onBranchChange($event)" required>
                   <ng-container *ngFor="let branch of branch$ | async; let i = index">
                     <option value="{{ branch.id }}">{{ branch.branch }}</option>
@@ -52,7 +52,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">Worker </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" name="user_id" [(ngModel)]="this.entity.record.user_id" class="custom-select"
+                <select name="user_id" [(ngModel)]="this.entity.record.user_id" class="custom-select"
                   required>
                   <ng-container *ngFor="let user of users$ | async">
                     <option value="{{ user.id }}">{{ user.first_name }}</option>
@@ -64,7 +64,7 @@
               <label name="shift_id" class="col-sm-3 col-form-label">Shift
               </label>
               <div class="input-group col">
-                <select [disabled]="isUpdate" (change)="onShiftWorkChange($event)" [(ngModel)]="this.entity.record.shift_work_id" name="shift_id"
+                <select (change)="onShiftWorkChange($event)" [(ngModel)]="this.entity.record.shift_work_id" name="shift_id"
                   class="custom-select" required>
                   <ng-container *ngFor="let shift of shift$ | async">
                     <option value="{{ shift.id }}">{{ shift.shift }}</option>

@@ -14,7 +14,6 @@ export class ToastService {
   }
 
   constructor(){
-    console.log("init toast serivice ")
   }
 
   remove(toast:Toast){

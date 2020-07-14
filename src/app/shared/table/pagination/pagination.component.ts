@@ -82,7 +82,6 @@ export class PaginationComponent implements OnInit,AfterContentInit {
   }
 
   onNavigate(page: number,pageLengthChange:boolean) {
-    console.log(page)
     this.currentPage = page
     if(pageLengthChange){
       this.sliceStart = 0

@@ -49,7 +49,6 @@ export class StocksService{
   getWithFilters(page:number,pageLimit:number,filters){
     return this.httpClient.get<Record[]>(`${environment.serverUrl}/records?page=${page}&pageLimit=${pageLimit}&date=${filters.date.toISOString()}`).pipe(
       tap(res => {
-        console.log(res)
         if(res['response']){
           this.store.set(res['response'])
         } else {
