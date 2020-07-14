@@ -13,7 +13,6 @@ export class BranchesService extends NgEntityService {
   }
 
   getById(id:string){
-    console.log(environment.serverUrl)
     return this.httpClient.get<Branch>(`${environment.serverUrl}/branches/${id}`)
   }
 

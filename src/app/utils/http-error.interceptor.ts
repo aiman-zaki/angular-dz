@@ -12,7 +12,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(private toastService:ToastService){}
 
   private errorHandler(response: any): Observable<HttpEvent<any>> {
-    console.log(response)
     this.toastService.showErrorMessage(response.error)
     throw response
   }

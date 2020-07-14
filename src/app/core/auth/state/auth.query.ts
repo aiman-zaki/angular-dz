@@ -10,7 +10,7 @@ export class AuthQuery extends Query<AuthState> {
     super(store);
   }
 
-  isLoggedIn(){
+  accessToken(){
     return localStorage.getItem("access_token") ? localStorage.getItem("access_token") : null
   }
 
