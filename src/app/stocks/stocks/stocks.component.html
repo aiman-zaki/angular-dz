@@ -16,7 +16,7 @@
     <div class="card">
       <div class="card-header bg-success" style="color: whitesmoke;">
           <ng-container *ngIf="filter.date else today" >
-            <h4> Stocks : {{filter.date | date:'dd/mm/yyyy '}} </h4>
+            <h4> Stocks : {{filter.date | date:'dd/MM/yyyy '}} </h4>
           </ng-container>
           <ng-template #today>
               <h4>Stocks : Today </h4>
