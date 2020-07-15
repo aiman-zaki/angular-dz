@@ -11,6 +11,12 @@ export class AuthService {
   constructor(private authStore: AuthStore, private http: HttpClient) {
   }
 
+
+  refreshToken(refreshToken){
+    return this.http.get<string>(`${environment.serverUrl}/auth/refresh-token/${refreshToken}`).pipe(
+    )
+  }
+
   login(creds:AuthModel) {
     return this.http.post<AuthModel>(`${environment.serverUrl}/auth/login`,creds).pipe(
       tap(auth => this.authStore.update(auth))

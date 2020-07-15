@@ -26,6 +26,8 @@ export class LoginComponent implements OnInit {
       password:formValue.password
     }).subscribe(res => {
       localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('refresh_token', res.refresh_token);
+
       this.router.navigateByUrl("branches")
     })
   }

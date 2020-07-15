@@ -37,6 +37,20 @@ export class PaginationComponent implements OnInit,AfterContentInit {
   constructor(private service:TableStateHelper ) {
   }
 
+
+  onDisabledNextBackButton(back:boolean){
+    if(back){
+      if(this.currentPage == 1 || this.currentPage == this.sliceStart+1){
+        return true
+      }
+    } else {
+      if(this.arrayLength == this.currentPage || this.currentPage == this.sliceEnd){
+        return true
+      }
+    }
+    return false
+  }
+
   onChangeSliceAndNavigate(i:number,forward:boolean){
     if(forward){
       this.sliceStart = this.sliceEnd
@@ -50,8 +64,20 @@ export class PaginationComponent implements OnInit,AfterContentInit {
     }
   }
 
+  onNavigateNextPage(back:boolean){
+    if(back){
+      //this.onChangeSliceAndNavigate(-1,false)
+      this.onNavigate(this.currentPage-1,false)
+    } else {
+      //this.onChangeSliceAndNavigate(+1,true)
+      this.onNavigate(this.currentPage+1,false)
 
-  onNavigateBackNext(back:boolean){
+
+    }
+  }
+
+
+  onNavigateNextSlice(back:boolean){
     if(back){
       //this.currentPage += -1
       this.onChangeSliceAndNavigate(-1,false)
@@ -72,7 +98,7 @@ export class PaginationComponent implements OnInit,AfterContentInit {
     }
   }
 
-  onNextDisabled(){
+  onHaveNextSlice(){
     if(this.sliceEnd > (this.pageArray.length-1) ){
       return true
     } else {
