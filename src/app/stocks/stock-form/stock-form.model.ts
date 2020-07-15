@@ -32,6 +32,8 @@ export interface Record {
   shift_work?:ShiftWork,
   user_id?:number,
   user?:User
+  financial?:Financial
+  expenses?:number
 
 }
 export interface RecordForm {

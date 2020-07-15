@@ -214,6 +214,7 @@ export class StockFormComponent implements OnInit {
         this.service.getStockProducts(this.id).subscribe(entity => {
           this.entity = entity
           this.expensesList = this.entity.expenses
+          this.expensesList = this.expensesList ? this.expensesList : []
           this.entity.record.date = new Date(entity.record.date)
           this.isUpdate = true
           this.onReturnProduct(this.entity.stock_products[0].product_id)
