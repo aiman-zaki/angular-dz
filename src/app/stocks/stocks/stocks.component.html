@@ -75,6 +75,7 @@
             <div class="card mt-2">
               <div class="card-body">
                 <div class="row">
+                  <!--
                   <div class="col-2">
                     <div class="row">
                       <div class="col text-right">
@@ -84,7 +85,7 @@
                         <small class="text-bold">{{ stock.id }}</small>
                       </div>
                     </div>
-                  </div>
+                  </div>-->
                   <div class="col-3">
                     <div class="row">
                       <div class="col text-right">
@@ -132,7 +133,31 @@
                       </div>
                     </div>
                   </div>
+                  <div class="col-3">
+                    <div class="row">
+                      <div class="col text-right">
+                        <small><span>
+                            Collection :
+                          </span></small>
+                      </div>
+                      <div class="col text-left">
+                        <small><span class="text-bold">RM {{ stock.financial.collection }}</span></small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col text-right">
+                        <small><span>
+                            Total Expenses :
+                          </span></small>
+                      </div>
+                      <div class="col text-left">
+                        <small><span class="text-bold">RM {{ stock.expenses }}</span></small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
 
+                  </div>
                   <div class="col" style="text-align: right;">
                     <button type="button" (click)="onViewStockForm(stock.id)" class="btn btn-primary btn-sm">
                       <fa-icon [icon]="faEye"></fa-icon> View
