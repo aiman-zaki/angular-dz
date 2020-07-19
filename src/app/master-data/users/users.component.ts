@@ -130,7 +130,11 @@ export class UsersComponent implements OnInit {
     this.formats = [
       {
         column:4,
-        format:'dd/MM/yyyy'
+        format:'dd/MM/yyyy hh:mm'
+      },
+      {
+        column:5,
+        format:'dd/MM/yyyy hh:mm'
       }
     ]
 

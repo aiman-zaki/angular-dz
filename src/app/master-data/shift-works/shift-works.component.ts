@@ -135,8 +135,12 @@ export class ShiftWorksComponent implements OnInit {
     ]
     this.formats = [
       {
+        column:3,
+        format:'dd/MM/yyyy hh:mm'
+      },
+      {
         column:4,
-        format:'dd/MM/yyyy'
+        format:'dd/MM/yyyy hh:mm'
       }
     ]
 
