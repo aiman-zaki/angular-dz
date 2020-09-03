@@ -1,0 +1,4 @@
+---
+- name: "Execute the ===> {{ instruction }} <=== instruction"
+  include: "{{ instruction }}.yml"
+

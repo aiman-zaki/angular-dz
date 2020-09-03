@@ -1,0 +1,47 @@
+---
+- name: Build and Deploy Angular-Dz
+  hosts: builders
+  tasks:
+    - debug: var=workpath
+    - name: Preparing Angular-Dz
+      vars:
+        instruction: build-angular
+        repo_folder: /home/aiman/Projects/build/
+        repo_name: aiman-zaki/angular-dz
+      include_role:
+        name: angular-dz
+
+- name: Preparing for Server
+  hosts: test_servers
+  tasks:
+    - name: Getting Server Ready
+      vars:
+        instruction: server-ready
+        nginx_folder: /var/www/angular-dz
+        repo_folder: /home/aiman/Projects/build
+      include_role:
+        name: angular-dz
+
+
+- name: Copy to server
+  hosts: builders
+  tasks:
+    - name: Copying
+      vars:
+        instruction: copy
+        nginx_folder: /var/www/angular-dz
+        repo_folder: /home/aiman/Projects/build/
+      include_role:
+        name: angular-dz
+
+
+- name: selinux
+  hosts: test_servers
+  tasks:
+    - name: Copying
+      vars:
+        nginx_folder: /var/www/angular-dz
+        instruction: selinux
+      include_role:
+        name: angular-dz
+...

@@ -1,0 +1,10 @@
+# inventory.yml
+
+production:
+  hosts:
+    builder:
+      ansible_connection: local
+    test_server:
+      ansible_connection: ssh
+      ansible_host: "kopisuam.me"
+      ansible_user: root

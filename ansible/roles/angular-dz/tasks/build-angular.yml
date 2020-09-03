@@ -1,0 +1,18 @@
+---
+- name: "Cloning angular dz {{repo_name}}"
+  git:
+    repo: git@github.com:aiman-zaki/angular-dz.git
+    clone: yes
+    force: yes
+    dest: "{{repo_folder}}"
+
+- name: "Installing Dependencies"
+  npm:
+    path: "{{repo_folder}}"
+
+- name: "Building angular-dz"
+  args:
+    chdir: "{{repo_folder}}"
+  command: ng build --prod --base-href=/angular-dz/
+
+

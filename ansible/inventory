@@ -1,0 +1,13 @@
+[all]
+[all:vars]
+workpath=/home/aiman/Projects/ansible-dz/
+
+
+[builders]
+builder ansible_connection=local
+
+
+[test_servers]
+test_server ansible_connection=ssh
+test_server ansible_host="kopisuam.me"
+test_server ansible_user=root

@@ -1,0 +1,6 @@
+---
+- name: "Deleting old angular-dz folder"
+  file:
+    path: "{{ nginx_folder }}"
+    state: absent
+
